@@ -27,6 +27,12 @@
                         </div>
 
                         <div class="mt-4">
+                            <x-input-label for="source" :value="__('Source')" />
+                            <x-text-input id="stok" class="block mt-1 w-full" type="text" name="source" :value="old('source')" required placeholder="Contoh: Dari Gudang" />
+                            <x-input-error :messages="$errors->get('source')" class="mt-2" />
+                        </div>
+
+                        <div class="mt-4">
                             <x-input-label for="foto" :value="__('Foto Barang')" />
                             <input id="foto" type="file" name="foto" class="mt-1 block w-full border p-2 rounded" accept="image/*" />
                             <x-input-error :messages="$errors->get('foto')" class="mt-2" />

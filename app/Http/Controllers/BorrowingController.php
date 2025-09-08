@@ -15,8 +15,9 @@ class BorrowingController extends Controller
     public function index()
     {
         $barangs = Barangs::all();
+        $borrowings = Borrowing::where('user_id', Auth::id())->with('barang')->get();
 
-        return view('dashboard', compact('barangs'));
+        return view('dashboard', compact('barangs', 'borrowings'));
     }
 
     /**
@@ -40,43 +41,71 @@ class BorrowingController extends Controller
 
         $barangs = Barangs::find($request->barang_id);
 
-        if ($barangs->stock < 1) {
+        if ($barangs->stok < 1) {
             return redirect()->back()->withErrors(['stock' => 'Barang Tidak Tersedia Saat Ini.']);
         }
 
         Borrowing::create([
             'user_id' => Auth::id(),
             'barang_id' => $request->barang_id,
-            'borrowed_at' => now(),
+            'borrowed_at' => $request->borrowed_at,
             'return_due_date' => $request->return_due_date,
             'status' => 'pending',
         ]);
 
-        $barangs->decrement('stock');
         return redirect()->route('dashboard')->with('success', 'Permintaan Peminjaman Berhasil Diajukan.');
     }
 
    
-    // public function show(string $id)
-    // {
-    //     //
-    // }
+    public function show(Borrowing $borrowing)
+    {
+        if ($borrowing->user_id !== Auth::id() && !Auth::user()->is_admin) {
+            abort(403);
+        }
+
+        return view('borrowing.show', compact('borrowing'));
+    }
 
     
-    // public function edit(string $id)
-    // {
-    //     //
-    // }
+    public function edit(Borrowing $borrowing)
+    {
+        if ($borrowing->user_id !== Auth::id() || $borrowing->status !== 'pending') {
+            abort(403);
+        }
+
+        return view('borrowing.edit', compact('borrowing'));
+    }
 
     
-    // public function update(Request $request, string $id)
-    // {
-    //     //
-    // }
+    public function update(Request $request, Borrowing $borrowing)
+    {
+        if ($borrowing->user_id !== Auth::id() || $borrowing->status !== 'pending') {
+            abort(403);
+        }
+
+        $request->validate([
+            'return_due_date' => 'required|date|after:today',
+        ]);
+
+        $borrowing->update([
+            'return_due_date' => $request->return_due_date,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Permintaan Peminjaman Berhasil Diperbarui.');
+    }
 
     
-    // public function destroy(string $id)
-    // {
-    //     //
-    // }
+    public function destroy(Borrowing $borrowing)
+    {
+        if ($borrowing->user_id !== Auth::id() || $borrowing->status !== 'pending') {
+            abort(403);
+        }
+        $borrowing->delete();
+        return redirect()->route('dashboard')->with('success', 'Permintaan Peminjaman Berhasil Dibatalkan.');
+    }
+
+    public function history(){
+        $borrowings = Borrowing::where('user_id', Auth::id())->with('barang')->orderBy('created_at', 'desc')->get();
+        return view('borrowing.history', compact('borrowings'));
+    }
 }

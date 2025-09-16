@@ -25,9 +25,9 @@
                             
                             <div class="flex items-center mb-4">
                                 @if($borrowing->barang->foto)
-                                    <img src="{{ asset('storage/' . $borrowing->barang->foto) }}" alt="{{ $borrowing->barang->nama_barang }}" class="w-24 h-24 object-contain mr-4 border rounded">
+                                    <img src="{{ asset('storage/' . $borrowing->barang->foto) }}" alt="{{ $borrowing->barang->nama_barang }}" class="w-20 h-20 object-contain mr-8 border rounded">
                                 @else
-                                    <div class="w-24 h-24 bg-gray-200 flex items-center justify-center rounded mr-4">
+                                    <div class="w-24 h-24 bg-gray-200 flex items-center justify-center rounded mr-8">
                                         <span class="text-gray-500 text-xs">Tidak ada foto</span>
                                     </div>
                                 @endif
@@ -35,6 +35,7 @@
                                 <div>
                                     <p class="font-semibold text-lg">{{ $borrowing->barang->nama_barang }}</p>
                                     <p class="text-sm text-gray-600">Kategori: {{ $borrowing->barang->kategori }}</p>
+                                    <p class="text-sm text-gray-600">Serial Number: {{ $borrowing->barang->serial_number ?? 'Tidak Ada' }}</p>
                                     <p class="text-sm text-gray-600">Stok Saat Ini: {{ $borrowing->barang->stok }}</p>
                                 </div>
                             </div>
@@ -53,6 +54,8 @@
                                         <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Sedang Dipinjam</span>
                                     @elseif($borrowing->status == 'returned')
                                         <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Dikembalikan</span>
+                                    @elseif($borrowing->status == 'rejected')
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
                                     @else
                                         <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Terlambat</span>
                                     @endif
@@ -137,6 +140,23 @@
                                     @endif
                                 </span>
                             </div>
+
+                            <div class="mb-2 flex">
+                                <span class="w-1/3 text-gray-600">Alasan:</span>
+                                <span class="w-2/3 font-medium">
+                                    {{ $borrowing->reason ?? 'Tidak ada alasan yang dicantumkan' }}
+                                </span>
+                            </div>
+
+                            <!-- Tambahkan informasi alasan penolakan jika status rejected -->
+                            @if($borrowing->status == 'rejected')
+                            <div class="mb-2 flex">
+                                <span class="w-1/3 text-gray-600">Alasan Penolakan:</span>
+                                <span class="w-2/3 font-medium text-red-600">
+                                    {{ $borrowing->reject_reason }}
+                                </span>
+                            </div>
+                            @endif
                         </div>
                         
                         <!-- Detail Peminjam (hanya visible oleh admin) -->
@@ -183,23 +203,20 @@
                                     Batalkan Peminjaman
                                 </button>
                             </form>
+                        @elseif($borrowing->status == 'borrowed' && $borrowing->user_id == Auth::id())
+                            <form action="{{ route('pinjam.return', $borrowing->id) }}" method="POST" class="ml-2">
+                                @csrf
+                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700" onclick="return confirm('Apakah Anda yakin ingin mengembalikan barang ini?')">
+                                    Kembalikan Barang
+                                </button>
+                            </form>
                         @endif
                         
-                        @if(Auth::user()->is_admin)
+                        @if(Auth::user()->role == 'admin')
                             @if($borrowing->status == 'pending')
-                                <form action="{{ route('admin.peminjaman.approve', $borrowing->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
-                                        Setujui Peminjaman
-                                    </button>
-                                </form>
+                                <!-- Tombol approval admin tetap ada -->
                             @elseif($borrowing->status == 'borrowed')
-                                <form action="{{ route('admin.peminjaman.return', $borrowing->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
-                                        Tandai Dikembalikan
-                                    </button>
-                                </form>
+                                <!-- Tombol return admin tetap ada -->
                             @endif
                         @endif
                     </div>
@@ -207,4 +224,16 @@
             </div>
         </div>
     </div>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="md:flex md:items-center md:justify-between"> 
+                <div class="mt-8 md:mt-0 flex items-center justify-center md:justify-end">
+                    <div class="text-sm text-gray-500">
+                        &copy; {{ date('Y') }} Sistem Peminjaman Barang. All rights reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 </x-app-layout>

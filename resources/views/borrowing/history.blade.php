@@ -21,6 +21,7 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Barang</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tgl Pinjam</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tgl Kembali</th>
@@ -32,10 +33,16 @@
                             @forelse($borrowings as $borrowing)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                     @if($borrowing->barang->foto)
+                                        <img src="{{ asset('storage/' . $borrowing->barang->foto) }}" alt="{{ $borrowing->barang->nama_barang }}" class="w-20 h-20 object-contain border rounded">
+                                    @else
+                                        <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                                            <span class="text-gray-500 text-xs">Tidak ada foto</span>
+                                        </div>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        @if($borrowing->barang->foto)
-                                            <img src="{{ asset('storage/' . $borrowing->barang->foto) }}" alt="{{ $borrowing->barang->nama_barang }}" class="w-10 h-10 object-contain mr-3">
-                                        @endif
                                         <div>
                                             <div class="text-sm font-medium text-gray-900">{{ $borrowing->barang->nama_barang }}</div>
                                             <div class="text-sm text-gray-500">{{ $borrowing->barang->kategori }}</div>
@@ -57,6 +64,10 @@
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                             Dikembalikan
                                         </span>
+                                    @elseif($borrowing->status == 'rejected')
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            Ditolak
+                                        </span>
                                     @else
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                             Terlambat
@@ -69,6 +80,12 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Apakah Anda yakin ingin membatalkan peminjaman ini?')">Batalkan</button>
+                                        </form>
+                                    @elseif($borrowing->status == 'borrowed')
+                                        <a href="{{ route('pinjam.show', $borrowing->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Detail</a>
+                                        <form action="{{ route('pinjam.return', $borrowing->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit" class="text-blue-600 hover:text-blue-900" onclick="return confirm('Apakah Anda yakin ingin mengembalikan barang ini?')">Kembalikan</button>
                                         </form>
                                     @else
                                         <a href="{{ route('pinjam.show', $borrowing->id) }}" class="text-indigo-600 hover:text-indigo-900">Detail</a>
@@ -88,4 +105,16 @@
             </div>
         </div>
     </div>
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-500 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="md:flex md:items-center md:justify-between"> 
+                <div class="mt-8 md:mt-0 flex items-center justify-center md:justify-end">
+                    <div class="text-sm text-white">
+                        &copy; {{ date('Y') }} Sistem Peminjaman Barang. All rights reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 </x-app-layout>

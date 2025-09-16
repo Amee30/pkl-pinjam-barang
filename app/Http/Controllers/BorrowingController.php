@@ -37,6 +37,7 @@ class BorrowingController extends Controller
             'barang_id' => 'required|exists:barangs,id',
             'borrowed_at' => 'required|date',
             'return_due_date' => 'required|date|after:borrowed_at',
+            'reason' => 'nullable|string|max:255',
         ]);
 
         $barangs = Barangs::find($request->barang_id);
@@ -51,16 +52,58 @@ class BorrowingController extends Controller
             'borrowed_at' => $request->borrowed_at,
             'return_due_date' => $request->return_due_date,
             'status' => 'pending',
+            'reason' => $request->reason,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Permintaan Peminjaman Berhasil Diajukan.');
     }
 
-   
+    public function returnItem(Request $request, Borrowing $borrowing){
+        // Pastikan peminjaman ada dan statusnya adalah 'borrowed'
+        if ($borrowing->user_id !== Auth::id()){
+            abort(403, 'Anda tidak memiliki akses untuk mengembalikan peminjaman ini.');
+        }
+
+        // Cek status peminjaman
+        if ($borrowing->status !== 'borrowed'){
+            return redirect()->back()->with('error', 'Barang ini tidak dalam status peminjaman');
+        }
+
+        $borrowing->update(['status' => 'returned']);
+
+        if ($borrowing->barang) {
+            $borrowing->barang->increment('stok');
+            // Catat pergerakan barang masuk
+            \App\Models\BarangMovement::create([
+                'barang_id' => $borrowing->barang_id,
+                'type' => 'in',
+                'quantity' => 1,
+                'source' => 'Pengembalian Peminjaman',
+                'reason' => 'Dikembalikan oleh ' . $borrowing->user->name,
+                'date' => now()->format('Y-m-d'),
+                'notes' => 'Pengembalian dari Peminjam ID ' . $borrowing->id,
+                'user_id' => Auth::id(),
+            ]);
+        }
+
+        return redirect()->route('pinjam.history')->with('success', 'Barang telah dikembalikan.');
+
+
+    }
+
+    /**
+     * Display the specified resource.
+     */
     public function show(Borrowing $borrowing)
     {
-        if ($borrowing->user_id !== Auth::id() && !Auth::user()->is_admin) {
-            abort(403);
+        // Explicitly check if user is admin first
+        if (Auth::user()->role == 'admin') {
+            return view('borrowing.show', compact('borrowing'));
+        }
+        
+        // If not admin, check if it's their own borrowing
+        if ($borrowing->user_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses untuk melihat peminjaman ini.');
         }
 
         return view('borrowing.show', compact('borrowing'));

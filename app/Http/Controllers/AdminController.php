@@ -26,6 +26,9 @@ class AdminController extends Controller
         $barangMasuk = BarangMovement::where('type', 'in')->sum('quantity');
         $barangKeluar = BarangMovement::where('type', 'out')->sum('quantity');
 
+        // Pagination 5 items per page
+        $borrowing = Borrowing::with(['user', 'barang'])->latest()->paginate(5);
+
         return view('admin.dashboard', compact('barangs', 'borrowing', 'totalBarangs', 'totalJenisBarang', 'totalUser', 'activeBorrowers', 'barangMasuk', 'barangKeluar'));
     }
 
@@ -117,12 +120,13 @@ class AdminController extends Controller
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'kategori' => 'required|string|max:255',
+            'serial_number' => 'nullable|string|max:255',
             'stok' => 'required|integer|min:0',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'source' => 'required|string|max:255',
         ]);
         
-        $data = $request->only(['nama_barang', 'kategori', 'stok']);
+        $data = $request->only(['nama_barang', 'kategori', 'serial_number' ,'stok']);
         
         if ($request->hasFile('foto')) {
             // Simpan file di storage/app/public/barangs
@@ -151,7 +155,14 @@ class AdminController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $barang = Barangs::findOrFail($id);
+        return view('admin.barangs.show', compact('barang'));
+    }
+
+    public function getDetails(string $id)
+    {
+        $barang = Barangs::findOrFail($id);
+        return response()->json($barang);
     }
 
     /**
@@ -170,11 +181,12 @@ class AdminController extends Controller
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'kategori' => 'required|string|max:255',
+            'serial_number' => 'nullable|string|max:255',
             'stok' => 'required|integer|min:0',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
         
-        $data = $request->only(['nama_barang', 'kategori', 'stok']);
+        $data = $request->only(['nama_barang', 'kategori', 'serial_number' ,'stok']);
 
         $oldStock = $barang->stok;
         $newStock = $request->stok;
@@ -218,5 +230,32 @@ class AdminController extends Controller
     {
         $barang->delete();
         return redirect()->route('admin.barang.index')->with('success', 'Barang berhasil dihapus.');
+    }
+    
+    /**
+     * Reject borrowing request
+     */
+    public function reject(Request $request, $borrowing_id)
+    {
+        // Validasi request
+        $request->validate([
+            'reject_reason' => 'required|string|max:255',
+        ]);
+
+        // Cari peminjaman berdasarkan ID
+        $borrowing = Borrowing::findOrFail($borrowing_id);
+
+        // Pastikan status masih pending
+        if ($borrowing->status !== 'pending') {
+            return redirect()->back()->with('error', 'Hanya peminjaman dengan status pending yang dapat ditolak.');
+        }
+
+        // Update status peminjaman menjadi 'rejected' dan tambahkan alasan
+        $borrowing->update([
+            'status' => 'rejected',
+            'reject_reason' => $request->reject_reason
+        ]);
+
+        return redirect()->back()->with('success', 'Peminjaman berhasil ditolak.');
     }
 }

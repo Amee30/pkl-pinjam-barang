@@ -12,6 +12,7 @@ class Barangs extends Model
     protected $fillable = [
         'nama_barang',
         'kategori',
+        'serial_number',
         'stok',
         'foto',
     ];

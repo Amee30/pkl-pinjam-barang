@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pinjam/history', [BorrowingController::class, 'history'])->name('pinjam.history');
     Route::get('/pinjam/{barangs}', [BorrowingController::class, 'create'])->name('pinjam.create');
     Route::post('/pinjam', [BorrowingController::class, 'store'])->name('pinjam.store');
+    Route::post('/pinjam/{borrowing}/return', [BorrowingController::class, 'returnItem'])->name('pinjam.return');
     
     Route::get('/pinjam/{borrowing}/show', [BorrowingController::class, 'show'])->name('pinjam.show');
     Route::delete('/pinjam/{borrowing}', [BorrowingController::class, 'destroy'])->name('pinjam.destroy');
@@ -34,7 +35,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('barang', AdminController::class);
     Route::resource('users', UserController::class);
     Route::resource('movements', BarangMovementController::class);
+    Route::get('/barang/{id}/details', [AdminController::class, 'getDetails'])->name('barang.details');
     Route::post('/peminjaman/{peminjaman}/approve', [AdminController::class, 'approve'])->name('peminjaman.approve');
+    Route::post('/peminjaman/{peminjaman}/reject', [AdminController::class, 'reject'])->name('peminjaman.reject');
     Route::post('/peminjaman/{peminjaman}/return', [AdminController::class, 'return'])->name('peminjaman.return');
 });
 

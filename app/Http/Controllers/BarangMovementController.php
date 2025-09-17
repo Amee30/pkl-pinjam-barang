@@ -14,7 +14,7 @@ class BarangMovementController extends Controller
      */
     public function index()
     {
-        $movements = BarangMovement::with(['barang', 'user'])->latest()->get();
+        $movements = BarangMovement::with(['barang', 'user'])->latest()->paginate(10);
         return view('admin.movements.index', compact('movements'));
     }
 

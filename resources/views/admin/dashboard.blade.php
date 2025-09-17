@@ -1,193 +1,214 @@
 <x-admin-layout>
-    <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
-
-            <!-- Statistik Dashboard dalam Satu Container -->
-            <div class="bg-white overflow-hidden shadow rounded-lg mb-8">
-                <div class="p-6 space-y-6">
-                    <!-- Total Stok Barang -->
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 bg-blue-100 p-3 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                            </svg>
-                        </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Total Stok Barang</dt>
-                                <dd class="text-2xl font-bold text-gray-900">{{ $totalBarangs }}</dd>
-                            </dl>
-                        </div>
+    <div class="flex flex-col min-h-screen">
+        <div class="flex-grow py-8">
+            <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+                @if(session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <span class="block sm:inline">{{ session('success') }}</span>
                     </div>
-
-                    <!-- Jenis Barang -->
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 bg-purple-100 p-3 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                            </svg>
-                        </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Jenis Barang</dt>
-                                <dd class="text-2xl font-bold text-gray-900">{{ $totalJenisBarang }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <!-- Barang Masuk -->
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 bg-green-100 p-3 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                            </svg>
-                        </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Barang Masuk</dt>
-                                <dd class="text-2xl font-bold text-green-600">{{ $barangMasuk }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <!-- Barang Keluar -->
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 bg-red-100 p-3 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
-                            </svg>
-                        </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Barang Keluar</dt>
-                                <dd class="text-2xl font-bold text-red-600">{{ $barangKeluar }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <!-- Peminjaman Aktif -->
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 bg-yellow-100 p-3 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Peminjaman Aktif</dt>
-                                <dd class="text-2xl font-bold text-yellow-600">{{ $activeBorrowers }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <!-- Total Pengguna -->
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 bg-indigo-100 p-3 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                        </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Total Pengguna</dt>
-                                <dd class="text-2xl font-bold text-indigo-600">{{ $totalUser }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Judul Tabel Peminjaman dengan informasi pagination -->
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-semibold text-gray-800">Daftar Peminjaman</h2>
-            </div>
-            
-            <!-- Tabel Peminjaman dengan pagination yang benar -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
-                <div class="p-6 text-gray-900">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Peminjam</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Barang</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tgl Kembali</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Alasan</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse($borrowing as $peminjaman)
-                            <tr>
-                                <td class="px-6 py-4">{{ $peminjaman->user->name }}</td>
-                                <td class="px-6 py-4">{{ $peminjaman->barang->nama_barang }}</td>
-                                <td class="px-6 py-4">{{ $peminjaman->return_due_date }}</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if($peminjaman->status == 'pending') bg-yellow-100 text-yellow-800 
-                                        @elseif($peminjaman->status == 'borrowed') bg-green-100 text-green-800 
-                                        @elseif($peminjaman->status == 'returned') bg-blue-100 text-blue-800
-                                        @elseif($peminjaman->status == 'rejected') bg-red-100 text-red-800 
-                                        @else bg-gray-100 text-gray-800 @endif">
-                                        {{ $peminjaman->status == 'rejected' ? 'ditolak' : $peminjaman->status }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-sm text-gray-500">
-                                        {{ Str::limit($peminjaman->reason, 50) ?? 'Tidak ada alasan' }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 flex flex-col space-x-2">
-                                    <a href="{{ route('pinjam.show', $peminjaman->id) }}" class="text-indigo-600 hover:text-indigo-900">Detail</a>
+                @endif
     
-                                    @if($peminjaman->status == 'pending')
-                                        <button type="button" 
-                                                onclick="openApprovalModal(
-                                                '{{ $peminjaman->id }}', 
-                                                '{{ $peminjaman->user->name }}', 
-                                                '{{ $peminjaman->user->department }}', 
-                                                '{{ $peminjaman->user->phone_number }}', 
-                                                '{{ $peminjaman->barang->serial_number }}', 
-                                                '{{ $peminjaman->barang->nama_barang }}', 
-                                                '{{ $peminjaman->borrowed_at }}', 
-                                                '{{ $peminjaman->return_due_date }}', 
-                                                '{{ $peminjaman->reason }}')" 
-                                                class="text-green-600 hover:text-green-900">
-                                            Approve
-                                        </button>
-                                    @elseif($peminjaman->status == 'borrowed')
-                                        <form action="{{ route('admin.peminjaman.return', $peminjaman) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="text-blue-600 hover:text-blue-900" onclick="return confirm('Apakah anda yakin ingin mengembalikan barang ini?')">Return</button>
-                                        </form>
-                                    @endif
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                                    Tidak ada data peminjaman.
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Pagination links dengan styling yang konsisten -->
-            @if($borrowing->hasPages())
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-4">
-                        {{ $borrowing->links() }}
+                <!-- Statistik Dashboard - Flexbox Layout -->
+                <div class="flex flex-wrap gap-4 mb-8 mt-4">
+                    <!-- Total Stok Barang -->
+                    <div class="flex-1 min-w-48 bg-white overflow-hidden shadow rounded-lg p-4">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="h-8 w-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <svg class="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4zM3 8a2 2 0 00-2 2v6a2 2 0 002 2h14a2 2 0 002-2v-6a2 2 0 00-2-2H3zm6.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-1">
+                                <p class="text-sm font-medium text-gray-600">Total Stok</p>
+                                <p class="text-xl font-bold text-gray-900">{{ $totalBarangs }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Jenis Barang -->
+                    <div class="flex-1 min-w-48 bg-white overflow-hidden shadow rounded-lg p-4">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="h-8 w-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <svg class="h-5 w-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-1">
+                                <p class="text-sm font-medium text-gray-600">Jenis barang</p>
+                                <p class="text-xl font-bold text-gray-900">{{ $totalJenisBarang }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Barang Masuk -->
+                    <div class="flex-1 min-w-48 bg-white overflow-hidden shadow rounded-lg p-4">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="h-8 w-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <svg class="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-1">
+                                <p class="text-sm font-medium text-gray-600">Barang masuk</p>
+                                <p class="text-xl font-bold text-gray-900">{{ $barangMasuk }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Barang Keluar -->
+                    <div class="flex-1 min-w-48 bg-white overflow-hidden shadow rounded-lg p-4">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="h-8 w-8 bg-red-100 rounded-lg flex items-center justify-center">
+                                    <svg class="h-5 w-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" transform="rotate(180 10 10)"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-1">
+                                <p class="text-sm font-medium text-gray-600">Barang keluar</p>
+                                <p class="text-xl font-bold text-gray-900">{{ $barangKeluar }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Peminjaman Aktif -->
+                    <div class="flex-1 min-w-48 bg-white overflow-hidden shadow rounded-lg p-4">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="h-8 w-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                    <svg class="h-5 w-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-1">
+                                <p class="text-sm font-medium text-gray-600">Peminjam aktif</p>
+                                <p class="text-xl font-bold text-gray-900">{{ $activeBorrowers }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Pengguna -->
+                    <div class="flex-1 min-w-48 bg-white overflow-hidden shadow rounded-lg p-4">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="h-8 w-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                    <svg class="h-5 w-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-1">
+                                <p class="text-sm font-medium text-gray-600">Total pengguna</p>
+                                <p class="text-xl font-bold text-gray-900">{{ $totalUser }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            @endif
+    
+                <!-- Daftar Peminjaman -->
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800 mt-4 mb-4">Daftar Peminjaman</h2>
+                    
+                    <!-- Tabel Peminjaman -->
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
+                        <div class="p-6 text-gray-900">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Peminjam</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Barang</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tgl Kembali</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Alasan</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @forelse($borrowing as $peminjaman)
+                                    <tr>
+                                        <td class="px-6 py-4">{{ $peminjaman->user->name }}</td>
+                                        <td class="px-6 py-4">{{ $peminjaman->barang->nama_barang }}</td>
+                                        <td class="px-6 py-4">{{ $peminjaman->return_due_date }}</td>
+                                        <td class="px-6 py-4">
+                                            @if($peminjaman->status == 'pending')
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                    Pending
+                                                </span>
+                                            @elseif($peminjaman->status == 'borrowed')
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    Borrowed
+                                                </span>
+                                            @elseif($peminjaman->status == 'returned')
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Returned
+                                                </span>
+                                            @elseif($peminjaman->status == 'rejected')
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                    Rejected
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="text-sm text-gray-500">
+                                                {{ Str::limit($peminjaman->reason, 50) ?? 'Tidak ada alasan' }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 flex flex-col space-x-2">
+                                            <a href="{{ route('pinjam.show', $peminjaman->id) }}" class="text-indigo-600 hover:text-indigo-900">Detail</a>
+            
+                                            @if($peminjaman->status == 'pending')
+                                                <button type="button" 
+                                                        onclick="openApprovalModal(
+                                                        '{{ $peminjaman->id }}', 
+                                                        '{{ $peminjaman->user->name }}', 
+                                                        '{{ $peminjaman->user->department }}', 
+                                                        '{{ $peminjaman->user->phone_number }}', 
+                                                        '{{ $peminjaman->barang->serial_number }}', 
+                                                        '{{ $peminjaman->barang->nama_barang }}', 
+                                                        '{{ $peminjaman->borrowed_at }}', 
+                                                        '{{ $peminjaman->return_due_date }}', 
+                                                        '{{ $peminjaman->reason }}')" 
+                                                        class="text-green-600 hover:text-green-900">
+                                                    Approve
+                                                </button>
+                                            @elseif($peminjaman->status == 'borrowed')
+                                                <form action="{{ route('admin.peminjaman.return', $peminjaman) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="text-blue-600 hover:text-blue-900" onclick="return confirm('Apakah anda yakin ingin mengembalikan barang ini?')">Return</button>
+                                                </form>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                            Tidak ada data peminjaman.
+                                        </td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+        
+                    <!-- Pagination links dengan styling yang konsisten -->
+                    @if($borrowing->hasPages())
+                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                            <div class="p-4">
+                                {{ $borrowing->links() }}
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 

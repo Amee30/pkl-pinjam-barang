@@ -100,7 +100,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $barangs = Barangs::all();
+        $barangs = Barangs::paginate(5); 
         return view('admin.barangs.index', compact('barangs'));
     }
 

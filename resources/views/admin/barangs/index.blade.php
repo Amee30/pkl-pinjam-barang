@@ -1,7 +1,7 @@
 <x-admin-layout>
     <div class="flex flex-col min-h-screen">
         <div class="flex-grow py-8">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex-grow">
+            <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 flex-grow">
                 {{-- Menampilkan pesan sukses jika ada --}}
                 @if(session('success'))
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -91,9 +91,15 @@
                                     @endforelse
                                 </tbody>
                             </table>
+                            <!-- Pagination Links -->
                         </div>
                     </div>
-                </div>
+                </div> 
+                @if($barangs->hasPages())
+                    <div class="mt-4 px-4 py-3">
+                        {{ $barangs->links() }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>

@@ -77,6 +77,8 @@
                                 <span class="w-2/3 font-medium">
                                     @if($borrowing->status == 'returned')
                                         <span class="text-green-600">Sudah dikembalikan</span>
+                                    @elseif($borrowing->status == 'rejected')
+                                        <span class="text-red-600">Peminjaman ditolak</span>
                                     @else
                                         @php
                                             $now = \Carbon\Carbon::now();

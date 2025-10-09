@@ -1,6 +1,6 @@
 <x-admin-layout>
     <div class="flex flex-col min-h-screen">
-        <div class="flex-grow py-8">
+        <div class="flex-grow py-8 mt-4">
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                 @if(session('success'))
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                             <div class="ml-1">
-                                <p class="text-sm font-medium text-gray-600">Total Stok</p>
+                                <p class="text-sm font-medium text-gray-600">Total Stock</p>
                                 <p class="text-xl font-bold text-gray-900">{{ $totalBarangs }}</p>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                                 </div>
                             </div>
                             <div class="ml-1">
-                                <p class="text-sm font-medium text-gray-600">Jenis barang</p>
+                                <p class="text-sm font-medium text-gray-600">Item Type</p>
                                 <p class="text-xl font-bold text-gray-900">{{ $totalJenisBarang }}</p>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                             <div class="ml-1">
-                                <p class="text-sm font-medium text-gray-600">Barang masuk</p>
+                                <p class="text-sm font-medium text-gray-600">Items In</p>
                                 <p class="text-xl font-bold text-gray-900">{{ $barangMasuk }}</p>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                             <div class="ml-1">
-                                <p class="text-sm font-medium text-gray-600">Barang keluar</p>
+                                <p class="text-sm font-medium text-gray-600">Items Out</p>
                                 <p class="text-xl font-bold text-gray-900">{{ $barangKeluar }}</p>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <div class="ml-1">
-                                <p class="text-sm font-medium text-gray-600">Peminjam aktif</p>
+                                <p class="text-sm font-medium text-gray-600">Active Borrowers</p>
                                 <p class="text-xl font-bold text-gray-900">{{ $activeBorrowers }}</p>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                 </div>
                             </div>
                             <div class="ml-1">
-                                <p class="text-sm font-medium text-gray-600">Total pengguna</p>
+                                <p class="text-sm font-medium text-gray-600">Total User</p>
                                 <p class="text-xl font-bold text-gray-900">{{ $totalUser }}</p>
                             </div>
                         </div>
@@ -115,29 +115,43 @@
     
                 <!-- Daftar Peminjaman -->
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mt-4 mb-4">Daftar Peminjaman</h2>
+                    <h2 class="text-xl font-semibold text-gray-800 mt-4 mb-4">List of Borrowers</h2>
                     
                     <!-- Tabel Peminjaman -->
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
                         <div class="p-6 text-gray-900">
-                            <table class="min-w-full divide-y divide-gray-200">
+                            <table class="w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Peminjam</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Barang</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tgl Kembali</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Borrower</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Item</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Reason</th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Alasan</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @forelse($borrowing as $peminjaman)
                                     <tr>
-                                        <td class="px-6 py-4">{{ $peminjaman->user->name }}</td>
-                                        <td class="px-6 py-4">{{ $peminjaman->barang->nama_barang }}</td>
-                                        <td class="px-6 py-4">{{ $peminjaman->return_due_date }}</td>
                                         <td class="px-6 py-4">
+                                            <div class="flex justify-center text-sm font-medium">{{ $peminjaman->user->name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex justify-center text-sm font-medium">{{ $peminjaman->barang->nama_barang }}</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex justify-center text-sm font-medium">{{ $peminjaman->return_due_date }}</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex justify-center">
+                                                <span class="text-sm text-gray-500">
+                                                    {{ Str::limit($peminjaman->reason, 50) ?? 'Tidak ada alasan' }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex justify-center">
                                             @if($peminjaman->status == 'pending')
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                                     Pending
@@ -155,42 +169,55 @@
                                                     Rejected
                                                 </span>
                                             @endif
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <span class="text-sm text-gray-500">
-                                                {{ Str::limit($peminjaman->reason, 50) ?? 'Tidak ada alasan' }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 flex flex-col space-x-2">
-                                            <a href="{{ route('pinjam.show', $peminjaman->id) }}" class="text-indigo-600 hover:text-indigo-900">Detail</a>
-            
-                                            @if($peminjaman->status == 'pending')
-                                                <button type="button" 
-                                                        onclick="openApprovalModal(
-                                                        '{{ $peminjaman->id }}', 
-                                                        '{{ $peminjaman->user->name }}', 
-                                                        '{{ $peminjaman->user->department }}', 
-                                                        '{{ $peminjaman->user->phone_number }}', 
-                                                        '{{ $peminjaman->barang->serial_number }}', 
-                                                        '{{ $peminjaman->barang->nama_barang }}', 
-                                                        '{{ $peminjaman->borrowed_at }}', 
-                                                        '{{ $peminjaman->return_due_date }}', 
-                                                        '{{ $peminjaman->reason }}')" 
-                                                        class="text-green-600 hover:text-green-900">
-                                                    Approve
-                                                </button>
-                                            @elseif($peminjaman->status == 'borrowed')
-                                                <form action="{{ route('admin.peminjaman.return', $peminjaman) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit" class="text-blue-600 hover:text-blue-900" onclick="return confirm('Apakah anda yakin ingin mengembalikan barang ini?')">Return</button>
-                                                </form>
-                                            @endif
+                                            <div class="flex flex-col space-y-1">
+                                                <a href="{{ route('pinjam.show', $peminjaman->id) }}" class="text-indigo-600 hover:text-indigo-900 flex text-sm justify-center">Detail</a>
+                
+                                                @if($peminjaman->status == 'pending')
+                                                    <button type="button" 
+                                                            onclick="openApprovalModal(
+                                                            '{{ $peminjaman->id }}', 
+                                                            '{{ $peminjaman->user->name }}', 
+                                                            '{{ $peminjaman->user->department }}', 
+                                                            '{{ $peminjaman->user->phone_number }}', 
+                                                            '{{ $peminjaman->barang->serial_number }}', 
+                                                            '{{ $peminjaman->barang->nama_barang }}', 
+                                                            '{{ $peminjaman->borrowed_at }}', 
+                                                            '{{ $peminjaman->return_due_date }}', 
+                                                            '{{ $peminjaman->reason }}')" 
+                                                            class="text-green-600 hover:text-green-900 text-sm flex justify-center">
+                                                        Approve
+                                                    </button>
+                                                    
+                                                    <button type="button" 
+                                                            onclick="openRejectModal(
+                                                            '{{ $peminjaman->id }}', 
+                                                            '{{ $peminjaman->user->name }}', 
+                                                            '{{ $peminjaman->user->department }}', 
+                                                            '{{ $peminjaman->user->phone_number }}', 
+                                                            '{{ $peminjaman->barang->serial_number }}', 
+                                                            '{{ $peminjaman->barang->nama_barang }}', 
+                                                            '{{ $peminjaman->borrowed_at }}', 
+                                                            '{{ $peminjaman->return_due_date }}', 
+                                                            '{{ $peminjaman->reason }}')" 
+                                                            class="text-red-600 hover:text-red-900 text-sm flex text-left justify-center">
+                                                        Reject
+                                                    </button>
+                                                @elseif($peminjaman->status == 'borrowed')
+                                                    <form action="{{ route('admin.peminjaman.return', $peminjaman) }}" method="POST" class="w-full flex justify-center">
+                                                        @csrf
+                                                        <button type="submit" class="text-blue-600 hover:text-blue-900 text-sm" onclick="return confirm('Are you sure you want to return this item?')">Return</button>
+                                                    </form>
+                                                @endif
+                                            </div>
                                         </td>
                                     </tr>
                                     @empty
                                     <tr>
                                         <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                                            Tidak ada data peminjaman.
+                                            No borrowing data available.
                                         </td>
                                     </tr>
                                     @endforelse
@@ -199,7 +226,7 @@
                         </div>
                     </div>
         
-                    <!-- Pagination links dengan styling yang konsisten -->
+                    <!-- Pagination -->
                     @if($borrowing->hasPages())
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-4">
@@ -216,29 +243,29 @@
     <x-modal name="approval-modal" focusable>
         <div class="p-6">
             <h2 class="text-lg font-medium text-white mb-4">
-                Detail Permintaan Peminjaman
+                <span id="modalTitle">Approve Borrowing</span>
             </h2>
             
             <div class="mb-4 border rounded-lg p-4">
-                <h4 class="text-md font-medium mb-2 border-b pb-2 text-white">Detail Peminjaman</h4>
+                <h4 class="text-md font-medium mb-2 border-b pb-2 text-white">Borrowing Details</h4>
                 
                 <div class="mb-2">
-                    <span class="font-medium text-white">Peminjam:</span>
+                    <span class="font-medium text-white">Borrower:</span>
                     <span id="modal-peminjam" class="text-sm text-white"></span>
                 </div>
 
                 <div class="mb-2">
-                    <span class="font-medium text-white">Departemen:</span>
+                    <span class="font-medium text-white">Department:</span>
                     <span id="modal-department" class="text-sm text-white"></span>
                 </div>
 
                 <div class="mb-2">
-                    <span class="font-medium text-white">Nomer Telepon:</span>
+                    <span class="font-medium text-white">Phone Number:</span>
                     <span id="modal-phone_number" class="text-sm text-white"></span>
                 </div>
                 
                 <div class="mb-2">
-                    <span class="font-medium text-white">Barang:</span>
+                    <span class="font-medium text-white">Item:</span>
                     <span id="modal-barang" class="text-sm text-white"></span>
                 </div>
 
@@ -248,17 +275,17 @@
                 </div>
                 
                 <div class="mb-2">
-                    <span class="font-medium text-white">Tanggal Peminjaman:</span>
+                    <span class="font-medium text-white">Borrowing Date:</span>
                     <span id="modal-tanggal-pinjam" class="text-sm text-white"></span>
                 </div>
                 
                 <div class="mb-2">
-                    <span class="font-medium text-white">Tanggal Pengembalian:</span>
+                    <span class="font-medium text-white">Return Date:</span>
                     <span id="modal-tanggal-kembali" class="text-sm text-white"></span>
                 </div>
                 
                 <div class="mb-2">
-                    <span class="font-medium text-white">Alasan Peminjaman:</span>
+                    <span class="font-medium text-white">Reason for Borrowing:</span>
                     <p id="modal-reason" class="text-sm text-white mt-1"></p>
                 </div>
             </div>
@@ -269,12 +296,12 @@
                     <button type="button" id="tab-approve" 
                             class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-t-md active-tab"
                             onclick="switchTab('approve')">
-                        Setujui
+                        Approve
                     </button>
                     <button type="button" id="tab-reject" 
                             class="px-4 py-2 text-sm font-medium text-white bg-gray-600 rounded-t-md"
                             onclick="switchTab('reject')">
-                        Tolak
+                        Reject
                     </button>
                 </div>
             </div>
@@ -282,21 +309,21 @@
             <!-- Form untuk approve -->
             <div id="content-approve" class="mb-4">
                 <p class="text-sm text-white mb-4">
-                    Apakah Anda yakin ingin menyetujui peminjaman ini? Tindakan ini akan mengurangi stok barang.
+                    Are you sure you want to approve this borrowing? This action will reduce the item stock.
                 </p>
                 
                 <div class="mt-6 flex justify-end space-x-4">
                     <button type="button" 
                             class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50" 
                             x-on:click="$dispatch('close')">
-                        Tutup
+                        Close
                     </button>
 
                     <form id="approval-form" method="POST" action="">
                         @csrf
                         <button type="submit" 
-                                class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
-                            Ya, Setujui
+                                class="inline-flex items-center px-4 py-2 bg-blue border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue">
+                            Approve
                         </button>
                     </form>
                 </div>
@@ -307,22 +334,22 @@
                 <form id="reject-form" method="POST" action="">
                     @csrf
                     <div class="mb-4">
-                        <label for="reject_reason" class="block text-sm font-medium text-white mb-1">Alasan Penolakan <span class="text-red-500">*</span></label>
+                        <label for="reject_reason" class="block text-sm font-medium text-white mb-1">Reason for Rejection <span class="text-red-500">*</span></label>
                         <textarea id="reject_reason" name="reject_reason" rows="3" 
                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                  placeholder="Berikan alasan mengapa peminjaman ini ditolak" required></textarea>
+                                  placeholder="Provide a reason for rejecting this borrowing" required></textarea>
                     </div>
                     
                     <div class="mt-6 flex justify-end space-x-4">
                         <button type="button" 
                                 class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50" 
                                 x-on:click="$dispatch('close')">
-                            Batal
+                            Close
                         </button>
 
                         <button type="submit" 
                                 class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
-                            Tolak Peminjaman
+                            Reject Borrowing
                         </button>
                     </div>
                 </form>
@@ -340,20 +367,40 @@
             document.getElementById('reject-form').action = '{{ url("admin/peminjaman") }}/' + id + '/reject';
             
             // Populate modal data
-            document.getElementById('modal-peminjam').textContent = peminjam || 'Tidak ada';
-            document.getElementById('modal-department').textContent = department || 'Tidak ada';
-            document.getElementById('modal-phone_number').textContent = phone_number || 'Tidak ada';
-            document.getElementById('modal-serial-number').textContent = serialNumber || 'Tidak ada';
-            document.getElementById('modal-barang').textContent = barang;
-            document.getElementById('modal-tanggal-pinjam').textContent = formatDate(tanggalPinjam);
-            document.getElementById('modal-tanggal-kembali').textContent = formatDate(tanggalKembali);
-            document.getElementById('modal-reason').textContent = reason || 'Tidak ada alasan';
-            
-            // Reset form reject
-            document.getElementById('reject_reason').value = '';
+            populateModalData(peminjam, department, phone_number, serialNumber, barang, tanggalPinjam, tanggalKembali, reason);
             
             // Open modal
             window.dispatchEvent(new CustomEvent('open-modal', { detail: 'approval-modal' }));
+        }
+        
+        function openRejectModal(id, peminjam, department, phone_number, serialNumber, barang, tanggalPinjam, tanggalKembali, reason) {
+            // Set form action
+            document.getElementById('approval-form').action = '{{ url("admin/peminjaman") }}/' + id + '/approve';
+            document.getElementById('reject-form').action = '{{ url("admin/peminjaman") }}/' + id + '/reject';
+            
+            // Populate modal data
+            populateModalData(peminjam, department, phone_number, serialNumber, barang, tanggalPinjam, tanggalKembali, reason);
+            
+            // Langsung switch ke tab reject
+            switchTab('reject');
+            
+            // Open modal
+            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'approval-modal' }));
+        }
+        
+        function populateModalData(peminjam, department, phone_number, serialNumber, barang, tanggalPinjam, tanggalKembali, reason) {
+            // Populate modal data
+            document.getElementById('modal-peminjam').textContent = peminjam || 'N/A';
+            document.getElementById('modal-department').textContent = department || 'N/A';
+            document.getElementById('modal-phone_number').textContent = phone_number || 'N/A';
+            document.getElementById('modal-serial-number').textContent = serialNumber || 'N/A';
+            document.getElementById('modal-barang').textContent = barang;
+            document.getElementById('modal-tanggal-pinjam').textContent = formatDate(tanggalPinjam);
+            document.getElementById('modal-tanggal-kembali').textContent = formatDate(tanggalKembali);
+            document.getElementById('modal-reason').textContent = reason || 'N/A';
+
+            // Reset form reject
+            document.getElementById('reject_reason').value = '';
         }
         
         function switchTab(tab) {
@@ -375,14 +422,14 @@
         }
         
         function formatDate(dateString) {
-            if (!dateString) return 'Tidak ada';
+            if (!dateString) return 'N/A';
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(dateString).toLocaleDateString('id-ID', options);
         }
     </script>
     
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-8">
+    <footer class="w-full bg-white border-t border-gray-200 mt-8">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <div class="md:flex md:items-center md:justify-between"> 
                 <div class="mt-8 md:mt-0 flex items-center justify-center md:justify-end">

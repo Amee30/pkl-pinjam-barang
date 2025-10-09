@@ -16,7 +16,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <x-nav-link :href="route('pinjam.history')" :active="request()->routeIs('pinjam.history')">
-                        {{ __('Riwayat Peminjaman') }}
+                        {{ __('Borrowing History') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -74,7 +74,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('pinjam.history')" :active="request()->routeIs('pinjam.history')">
-                {{ __('Riwayat Peminjaman') }}
+                {{ __('Borrowing History') }}
             </x-responsive-nav-link>
         </div>
 

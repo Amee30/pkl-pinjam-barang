@@ -2,11 +2,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-white leading-tight">
-            {{ __('Riwayat Peminjaman') }}
+            {{ __('Borrowing History') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 mt-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if(session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -16,17 +16,15 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-medium mb-4">Riwayat Peminjaman Barang</h3>
-                    
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Barang</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tgl Pinjam</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tgl Kembali</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Borrowed At</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Return Due Date</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -37,7 +35,7 @@
                                         <img src="{{ asset('storage/' . $borrowing->barang->foto) }}" alt="{{ $borrowing->barang->nama_barang }}" class="w-20 h-20 object-contain border rounded">
                                     @else
                                         <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
-                                            <span class="text-gray-500 text-xs">Tidak ada foto</span>
+                                            <span class="text-gray-500 text-xs">No Photo</span>
                                         </div>
                                     @endif
                                 </td>
@@ -54,23 +52,23 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($borrowing->status == 'pending')
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                            Menunggu Persetujuan
+                                            Waiting for Approval
                                         </span>
                                     @elseif($borrowing->status == 'borrowed')
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                            Sedang Dipinjam
+                                            Currently Borrowed
                                         </span>
                                     @elseif($borrowing->status == 'returned')
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Dikembalikan
+                                            Returned
                                         </span>
                                     @elseif($borrowing->status == 'rejected')
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            Ditolak
+                                            Rejected
                                         </span>
                                     @else
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            Terlambat
+                                            Overdue
                                         </span>
                                     @endif
                                 </td>
@@ -79,23 +77,23 @@
                                         <form action="{{ route('pinjam.destroy', $borrowing->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Apakah Anda yakin ingin membatalkan peminjaman ini?')">Batalkan</button>
+                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to cancel this borrowing?')">Cancel</button>
                                         </form>
                                     @elseif($borrowing->status == 'borrowed')
                                         <a href="{{ route('pinjam.show', $borrowing->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Detail</a>
                                         <form action="{{ route('pinjam.return', $borrowing->id) }}" method="POST" class="inline">
                                             @csrf
-                                            <button type="submit" class="text-blue-600 hover:text-blue-900" onclick="return confirm('Apakah Anda yakin ingin mengembalikan barang ini?')">Kembalikan</button>
+                                            <button type="submit" class="text-blue-600 hover:text-blue-900" onclick="return confirm('Are you sure you want to return this item?')">Return</button>
                                         </form>
                                     @else
-                                        <a href="{{ route('pinjam.show', $borrowing->id) }}" class="text-indigo-600 hover:text-indigo-900">Detail</a>
+                                        <a href="{{ route('pinjam.show', $borrowing->id) }}" class="text-indigo-600 hover:text-indigo-900">Details</a>
                                     @endif
                                 </td>
                             </tr>
                             @empty
                             <tr>
                                 <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                                    Anda belum meminjam barang apapun.
+                                   You haven't borrowed anything yet.
                                 </td>
                             </tr>
                             @endforelse

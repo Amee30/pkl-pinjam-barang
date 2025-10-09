@@ -1,6 +1,6 @@
 <x-admin-layout>
     <div class="flex flex-col min-h-screen">
-        <div class="flex-grow py-8">
+        <div class="flex-grow py-8 mt-4">
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 flex-grow">
                 {{-- Menampilkan pesan sukses jika ada --}}
                 @if(session('success'))
@@ -12,9 +12,9 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between mb-4">
-                            <h3 class="text-lg font-medium">Daftar Barang</h3>
+                            <h3 class="text-lg font-medium">Item List</h3>
                             <a href="{{ route('admin.barang.create') }}" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
-                                Tambah Barang
+                                Add Item
                             </a>
                         </div>
     
@@ -23,11 +23,11 @@
                             <table class="w-full bg-white border-collapse">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Foto</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Nama Barang</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Kategori</th>
-                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Stok</th>
-                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Aksi</th>
+                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Photo</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Item Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Category</th>
+                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Stock</th>
+                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -40,20 +40,20 @@
                                                 </div>
                                             @else
                                                 <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center mx-auto">
-                                                    <span class="text-gray-500 text-xs">Tidak ada foto</span>
+                                                    <span class="text-gray-500 text-xs">No Image</span>
                                                 </div>
                                             @endif
                                         </td>
                                         <td class="px-6 py-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ $barang->nama_barang }}</div>
+                                            <div class="flex justify-center text-sm font-medium text-gray-900">{{ $barang->nama_barang }}</div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-5xl font-medium bg-blue-100 text-blue-800">
+                                            <span class="flex justify-center items-center px-2.5 py-0.5 rounded-full text-5xl font-medium bg-blue-100 text-blue-800">
                                                 {{ $barang->kategori }}
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-5xl font-medium 
+                                            <span class="flex justify-center items-center px-2.5 py-0.5 rounded-full text-5xl font-medium 
                                                 {{ $barang->stok > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                                 {{ $barang->stok }}
                                             </span>
@@ -63,15 +63,15 @@
                                                 <button type="button" 
                                                     onclick="showModal('{{ $barang->id }}')"
                                                     class="text-blue-600 hover:text-blue-900 font-medium">
-                                                    Detail
+                                                    Details
                                                 </button>
                                                 
                                                 <a href="{{ route('admin.barang.edit', $barang->id) }}" class="text-indigo-600 hover:text-indigo-900 font-medium">Edit</a>
-                                                
-                                                <form action="{{ route('admin.barang.destroy', $barang->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus barang ini?');">
+
+                                                <form action="{{ route('admin.barang.destroy', $barang->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900 font-medium">Hapus</button>
+                                                    <button type="submit" class="text-red-600 hover:text-red-900 font-medium">Delete</button>
                                                 </form>
                                             </div>
                                         </td>
@@ -122,11 +122,11 @@
                         <div class="md:w-2/3">
                             <div class="space-y-4">
                                 <div>
-                                    <p class="text-sm text-gray-500">Nama Barang</p>
+                                    <p class="text-sm text-gray-500">Item Name</p>
                                     <p class="text-lg font-semibold" id="productName">-</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Kategori</p>
+                                    <p class="text-sm text-gray-500">Category</p>
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800" id="productCategory">-</span>
                                 </div>
                                 <div>
@@ -134,7 +134,7 @@
                                     <p class="text-md" id="productSerial">-</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Stok</p>
+                                    <p class="text-sm text-gray-500">Stock</p>
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" id="productStock">-</span>
                                 </div>
                             </div>
@@ -143,7 +143,7 @@
                 </div>
                 <div class="mt-4 border-t pt-4">
                     <button class="px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-md w-full sm:w-auto sm:text-sm" onclick="closeModal()">
-                        Tutup
+                        Close
                     </button>
                 </div>
             </div>
@@ -176,10 +176,10 @@
                 })
                 .then(data => {
                     // Isi konten modal dengan data barang
-                    document.getElementById('modalTitle').innerText = 'Detail Barang: ' + data.nama_barang;
+                    document.getElementById('modalTitle').innerText = 'Item Details: ' + data.nama_barang;
                     document.getElementById('productName').innerText = data.nama_barang;
                     document.getElementById('productCategory').innerText = data.kategori;
-                    document.getElementById('productSerial').innerText = data.serial_number || 'Tidak ada';
+                    document.getElementById('productSerial').innerText = data.serial_number || 'N/A';
                     
                     const stockElement = document.getElementById('productStock');
                     stockElement.innerText = data.stok;
@@ -196,7 +196,7 @@
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
-                    alert('Gagal memuat detail barang: ' + error.message);
+                    alert('Error: ' + error.message);
                 });
         }
         

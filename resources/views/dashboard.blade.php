@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-white leading-tight">
-            {{ __('Dashboard Peminjaman Barang') }}
+            {{ __('Hello ' . Auth::user()->name) }}
         </h2>
     </x-slot>
 
@@ -16,7 +16,7 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-medium mb-4">Daftar Barang Tersedia</h3>
+                    <h3 class="text-lg font-medium mb-4">Available Items</h3>
                     
                     <!-- Grid View untuk Barang -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -27,7 +27,7 @@
                                     @if($barang->stok > 0)
                                         <!-- Badge untuk status barang -->
                                         <div class="absolute top-2 right-2 bg-blue-500 text-white rounded-full px-2 py-1 text-xs font-semibold">
-                                            Tersedia
+                                            Available
                                         </div>
                                     @endif
 
@@ -38,7 +38,7 @@
                                         </div>
                                     @else
                                         <div class="w-full h-48 bg-gray-100 flex items-center justify-center">
-                                            <span class="text-gray-500 text-xs">Tidak ada foto</span>
+                                            <span class="text-gray-500 text-xs">No Image</span>
                                         </div>
                                     @endif
                                 </div>
@@ -56,16 +56,16 @@
                                         <!-- Informasi Stok & Status -->
                                         <div class="flex items-center justify-between mt-2">
                                             <div class="flex items-center">
-                                                <span class="text-sm mr-2">Stok:</span>
+                                                <span class="text-sm mr-2">Stock:</span>
                                                 <span class="font-semibold text-lg">{{ $barang->stok }}</span>
                                             </div>
                                             @if($barang->stok > 0)
                                                 <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
-                                                    Tersedia
+                                                    Available
                                                 </span>
                                             @else
                                                 <span class="text-xs font-medium text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
-                                                    Habis
+                                                    Out of Stock
                                                 </span>
                                             @endif
                                         </div>
@@ -75,11 +75,11 @@
                                     <div class="mt-4">
                                         @if($barang->stok > 0)
                                             <a href="{{ route('pinjam.create', $barang->id) }}" class="w-full inline-flex justify-center items-center px-3 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 transition ease-in-out duration-150">
-                                                Pinjam
+                                                Borrow
                                             </a>
                                         @else
                                             <button disabled class="w-full inline-flex justify-center items-center px-3 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-500 uppercase tracking-widest cursor-not-allowed">
-                                                Stok Habis
+                                                Out of Stock
                                             </button>
                                         @endif
                                     </div>
@@ -87,7 +87,7 @@
                             </div>
                         @empty
                             <div class="col-span-full text-center py-8 text-gray-500">
-                                Belum ada barang yang tersedia.
+                                No available items.
                             </div>
                         @endforelse
                     </div>

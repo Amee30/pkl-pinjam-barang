@@ -98,7 +98,15 @@ class BorrowingController extends Controller
     {
         // Explicitly check if user is admin first
         if (Auth::user()->role == 'admin') {
-            return view('borrowing.show', compact('borrowing'));
+            $userId = $borrowing->user_id;
+            $userStats = [
+                'total' => Borrowing::where('user_id', $userId)->count(),
+                'active' => Borrowing::where('user_id', $userId)->where('status', 'borrowed')->count(),
+                'completed' => Borrowing::where('user_id', $userId)->where('status', 'returned')->count(),
+                'rejected' => Borrowing::where('user_id', $userId)->where('status', 'rejected')->count(),
+                'pending' => Borrowing::where('user_id', $userId)->where('status', 'pending')->count(),
+            ];
+            return view('borrowing.show', compact('borrowing', 'userStats'));
         }
         
         // If not admin, check if it's their own borrowing

@@ -1,7 +1,7 @@
 <!-- filepath: /d:/laragon/www/pkl-pinjam-barang/resources/views/admin/movements/index.blade.php -->
 <x-admin-layout>
     <div class="flex flex-col min-h-screen">
-        <div class="flex-grow py-8">
+        <div class="flex-grow py-8 mt-4">
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                 @if(session('success'))
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -12,54 +12,68 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between mb-4">
-                            <h3 class="text-lg font-medium">Riwayat Pergerakan Barang</h3>
+                            <h3 class="text-lg font-medium">Item Movement History</h3>
                             <a href="{{ route('admin.movements.create') }}" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
-                                Tambah Pergerakan
+                                Add Movement
                             </a>
                         </div>
     
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Barang</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sumber/Alasan</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source/Reason</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($movements as $movement)
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $movement->date->format('d/m/Y') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $movement->barang->nama_barang }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex justify-center">
+                                            {{ $movement->date->format('d/m/Y') }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex justify-center">
+                                            {{ $movement->barang->nama_barang }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex justify-center">
+                                            @if($movement->type == 'in')
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    In
+                                                </span>
+                                            @else
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                    Out
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex justify-center">
+                                            {{ $movement->quantity }}
+                                        </div>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($movement->type == 'in')
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Masuk
-                                            </span>
-                                        @else
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                Keluar
-                                            </span>
+                                            <strong>Source:</strong> {{ $movement->source ?: '-' }}<br>
                                         @endif
+                                        <strong>Reason:</strong> {{ $movement->reason }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $movement->quantity }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($movement->type == 'in')
-                                            <strong>Sumber:</strong> {{ $movement->source ?: '-' }}<br>
-                                        @endif
-                                        <strong>Alasan:</strong> {{ $movement->reason }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-4">
-                                        <a href="{{ route('admin.movements.show', $movement->id) }}" class="text-blue-600 hover:text-blue-900">Detail</a>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-4">
+                                        <a href="{{ route('admin.movements.show', $movement->id) }}" class="text-blue-600 hover:text-blue-900 flex justify-center">Details</a>
                                     </td>
                                 </tr>
                                 @empty
                                 <tr>
                                     <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                                        Belum ada data pergerakan barang.
+                                        No data on goods movement yet.
                                     </td>
                                 </tr>
                                 @endforelse

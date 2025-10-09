@@ -1,21 +1,21 @@
 <x-admin-layout>
     <div class="flex flex-col min-h-screen">
-        <div class="flex-grow py-8">
+        <div class="flex-grow py-8 mt-4">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <h3 class="text-lg font-medium mb-4">Tambah Pergerakan Barang</h3>
+                        <h3 class="text-lg font-medium mb-4">Add Item Movement</h3>
                         
                         <form method="POST" action="{{ route('admin.movements.store') }}">
                             @csrf
     
                             <div>
-                               <label for="barang_id" :value="__('Pilih Barang')" class="text-black">Pilih Barang</label>
+                               <label for="barang_id" :value="__('Pilih Barang')" class="text-black">Select Item</label>
                                 <select id="barang_id" name="barang_id" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full" required>
-                                    <option value="">-- Pilih Barang --</option>
+                                    <option value="">-- Select Item --</option>
                                     @foreach($barangs as $barang)
                                         <option value="{{ $barang->id }}" {{ old('barang_id') == $barang->id ? 'selected' : '' }}>
-                                            {{ $barang->nama_barang }} (Stok: {{ $barang->stok }})
+                                            {{ $barang->nama_barang }} (Stock: {{ $barang->stok }})
                                         </option>
                                     @endforeach
                                 </select>
@@ -23,50 +23,50 @@
                             </div>
     
                             <div class="mt-4">
-                                <label for="type" :value="__('Tipe Pergerakan')" class="text-black">Tipe Pergerakan</label>
+                                <label for="type" :value="__('Tipe Pergerakan')" class="text-black">Movement Type</label>
                                 <select id="type" name="type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full" required>
-                                    <option value="in" {{ old('type') == 'in' ? 'selected' : '' }}>Masuk</option>
-                                    <option value="out" {{ old('type') == 'out' ? 'selected' : '' }}>Keluar</option>
+                                    <option value="in" {{ old('type') == 'in' ? 'selected' : '' }}>In</option>
+                                    <option value="out" {{ old('type') == 'out' ? 'selected' : '' }}>Out</option>
                                 </select>
                                 <x-input-error :messages="$errors->get('type')" class="mt-2" />
                             </div>
     
                             <div class="mt-4">
-                                <label for="quantity" :value="__('Jumlah')" class="text-black">Jumlah</label>
+                                <label for="quantity" :value="__('Jumlah')" class="text-black">Quantity</label>
                                 <x-text-input id="quantity" class="block mt-1 w-full" type="number" name="quantity" :value="old('quantity')" min="1" required />
                                 <x-input-error :messages="$errors->get('quantity')" class="mt-2" />
                             </div>
     
                             <div class="mt-4" id="source-container">
-                                <label for="source" :value="__('Sumber/Asal Barang')" class="text-black">Sumber/Asal Barang</label>
+                                <label for="source" :value="__('Sumber/Asal Barang')" class="text-black">Source/Origin Item</label>
                                 <x-text-input id="source" class="block mt-1 w-full" type="text" name="source" :value="old('source')" />
                                 <x-input-error :messages="$errors->get('source')" class="mt-2" />
                             </div>
     
                             <div class="mt-4">
-                                <label for="reason" class="text-black">Alasan</label>
+                                <label for="reason" class="text-black">Reason</label>
                                 <x-text-input id="reason" class="block mt-1 w-full" type="text" name="reason" :value="old('reason')" required />
                                 <x-input-error :messages="$errors->get('reason')" class="mt-2" />
                             </div>
     
                             <div class="mt-4">
-                                <label for="date" class="text-black">Tanggal</label>
+                                <label for="date" class="text-black">Date</label>
                                 <x-text-input id="date" class="block mt-1 w-full" type="date" name="date" :value="old('date', date('Y-m-d'))" required />
                                 <x-input-error :messages="$errors->get('date')" class="mt-2" />
                             </div>
     
                             <div class="mt-4">
-                                <label for="notes" class="text-black">Catatan Tambahan</label>
+                                <label for="notes" class="text-black">Additional Notes</label>
                                 <textarea id="notes" name="notes" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full" rows="3">{{ old('notes') }}</textarea>
                                 <x-input-error :messages="$errors->get('notes')" class="mt-2" />
                             </div>
     
                             <div class="flex items-center justify-end mt-4">
                                 <a href="{{ route('admin.movements.index') }}" class="text-sm text-gray-600 hover:text-gray-900 mr-4">
-                                    {{ __('Batal') }}
+                                    {{ __('Cancel') }}
                                 </a>
                                 <x-primary-button>
-                                    {{ __('Simpan') }}
+                                    {{ __('Save') }}
                                 </x-primary-button>
                             </div>
                         </form>

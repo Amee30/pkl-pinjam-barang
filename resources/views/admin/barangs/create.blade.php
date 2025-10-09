@@ -1,22 +1,22 @@
 <x-admin-layout>
     <div class="flex flex-col min-h-screen">
-        <div class="flex-grow py-8">
+        <div class="flex-grow py-8 mt-4">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-black">
-                        <h3 class="text-lg font-medium mb-4">Tambah Barang Baru</h3>
+                        <h3 class="text-lg font-medium mb-4">Add New Item</h3>
                         
                         <form method="POST" action="{{ route('admin.barang.store') }}" enctype="multipart/form-data">
                             @csrf
     
                             <div>
-                                <label for="nama_barang" :value="__('Nama Barang')" class="text-black">Nama Barang</label>
+                                <label for="nama_barang" :value="__('Nama Barang')" class="text-black">Item Name</label>
                                 <x-text-input id="nama_barang" class="block mt-1 w-full" type="text" name="nama_barang" :value="old('nama_barang')" required autofocus />
                                 <x-input-error :messages="$errors->get('nama_barang')" class="mt-2" />
                             </div>
     
                             <div class="mt-4">
-                                <label for="kategori" :value="__('Kategori')" class="text-black">Kategori</label>
+                                <label for="kategori" :value="__('Kategori')" class="text-black">Category</label>
                                 <x-text-input id="kategori" class="block mt-1 w-full" type="text" name="kategori" :value="old('kategori')" required />
                                 <x-input-error :messages="$errors->get('kategori')" class="mt-2" />
                             </div>
@@ -28,29 +28,29 @@
                             </div>
     
                             <div class="mt-4">
-                                <label for="stok" :value="__('Stok Awal')" class="text-black">Stok Awal</label>
+                                <label for="stok" :value="__('Stok Awal')" class="text-black">Initial Stock</label>
                                 <x-text-input id="stok" class="block mt-1 w-full" type="number" name="stok" :value="old('stok', 1)" required />
                                 <x-input-error :messages="$errors->get('stok')" class="mt-2" />
                             </div>
     
                             <div class="mt-4">
                                 <label for="source" :value="__('Source')" class="text-black">Source</label>
-                                <x-text-input id="source" class="block mt-1 w-full" type="text" name="source" :value="old('source')" required placeholder="Contoh: Dari Gudang" />
+                                <x-text-input id="source" class="block mt-1 w-full" type="text" name="source" :value="old('source')" required placeholder="Example: From Warehouse" />
                                 <x-input-error :messages="$errors->get('source')" class="mt-2" />
                             </div>
     
                             <div class="mt-4">
-                                <label for="foto" :value="__('Foto Barang')" class="text-black">Foto Barang</label>
+                                <label for="foto" :value="__('Foto Barang')" class="text-black">Item Photo</label>
                                 <input id="foto" type="file" name="foto" class="mt-1 block w-full border p-2 rounded" accept="image/*" />
                                 <x-input-error :messages="$errors->get('foto')" class="mt-2" />
                             </div>
     
                             <div class="flex items-center justify-end mt-4">
                                 <a href="{{ route('admin.barang.index') }}" class="text-sm text-gray-600 hover:text-gray-900 mr-4">
-                                    {{ __('Batal') }}
+                                    {{ __('Cancel') }}
                                 </a>
                                 <x-primary-button>
-                                    {{ __('Simpan Barang') }}
+                                    {{ __('Submit Item') }}
                                 </x-primary-button>
                             </div>
                         </form>

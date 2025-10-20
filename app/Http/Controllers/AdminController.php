@@ -57,14 +57,14 @@ class AdminController extends Controller
                 'type' => 'out',
                 'quantity' => 1,
                 'source' => null,
-                'reason' => 'Dipinjam oleh '. $borrowing->user->name,
+                'reason' => 'Borrowed by '. $borrowing->user->name,
                 'date' => now()->format('Y-m-d'),
-                'notes' => 'Peminjam ID'. $borrowing->user_id,
+                'notes' => 'Borrower ID'. $borrowing->user_id,
                 'user_id' => Auth::id(),
             ]
             );
 
-        return redirect()->back()->with('success', 'Peminjaman disetujui.');
+        return redirect()->back()->with('success', 'Borrowing approved.');
     }
 
     public function return(Request $request, $borrowing_id)
@@ -82,16 +82,16 @@ class AdminController extends Controller
                 'barang_id' => $borrowing->barang_id,
                 'type' => 'in',
                 'quantity' => 1,
-                'source' => 'Pengembalian Peminjaman',
-                'reason' => 'Dikembalikan oleh ' . $borrowing->user->name,
+                'source' => 'Return Borrowing',
+                'reason' => 'Returned by ' . $borrowing->user->name,
                 'date' => now()->format('Y-m-d'),
-                'notes' => 'Pengembalian dari Peminjam ID ' . $borrowing->id,
+                'notes' => 'Return from Borrower ID ' . $borrowing->id,
                 'user_id' => Auth::id(),
             ]);
         }
 
 
-        return redirect()->back()->with('success', 'Barang telah dikembalikan.');
+        return redirect()->back()->with('success', 'The item has been returned.');
     }
 
     
@@ -141,13 +141,13 @@ class AdminController extends Controller
             'type' => 'in',
             'quantity' => $request->stok,
             'source' => $request->source,
-            'reason' => 'Penambahan barang baru',
+            'reason' => 'Initial Stock by admin ',
             'date' => now()->format('Y-m-d'),
-            'notes' => 'Ditambahkan oleh admin '. Auth::user()->name,
+            'notes' => 'Added by admin '. Auth::user()->name,
             'user_id' => Auth::id(),
         ]);
         
-        return redirect()->route('admin.barang.index')->with('success', 'Barang berhasil ditambahkan.');
+        return redirect()->route('admin.barang.index')->with('success', 'Item added successfully.');
     }
 
     /**
@@ -213,14 +213,14 @@ class AdminController extends Controller
                 'barang_id' => $barang->id,
                 'type' => $stockDifference > 0 ? 'in' : 'out',
                 'quantity' => abs($stockDifference),
-                'source' => $stockDifference > 0 ? 'Penambahan Stok' : 'Pengurangan Stok',
-                'reason' => $stockDifference > 0 ? 'Stok ditambah oleh admin '. Auth::user()->name : 'Stok dikurangi oleh admin '. Auth::user()->name,
+                'source' => $stockDifference > 0 ? 'Stock Addition' : 'Stock Reduction',
+                'reason' => $stockDifference > 0 ? 'Stock added by admin '. Auth::user()->name : 'Stock reduced by admin '. Auth::user()->name,
                 'date' => now()->format('Y-m-d'),
-                'notes' => $stockDifference > 0 ? 'Penambahan stok dari '.$oldStock.' menjadi '.$newStock : 'Pengurangan stok dari '.$oldStock.' menjadi '.$newStock,
+                'notes' => $stockDifference > 0 ? 'Stock added from '.$oldStock.' to '.$newStock : 'Stock reduced from '.$oldStock.' to '.$newStock,
                 'user_id' => Auth::id(),
             ]);
         }
-        return redirect()->route('admin.barang.index')->with('success', 'Barang berhasil diperbarui.');
+        return redirect()->route('admin.barang.index')->with('success', 'Item updated successfully.');
     }
 
     /**
@@ -229,7 +229,7 @@ class AdminController extends Controller
     public function destroy(Barangs $barang)
     {
         $barang->delete();
-        return redirect()->route('admin.barang.index')->with('success', 'Barang berhasil dihapus.');
+        return redirect()->route('admin.barang.index')->with('success', 'Item deleted successfully.');
     }
     
     /**
@@ -247,7 +247,7 @@ class AdminController extends Controller
 
         // Pastikan status masih pending
         if ($borrowing->status !== 'pending') {
-            return redirect()->back()->with('error', 'Hanya peminjaman dengan status pending yang dapat ditolak.');
+            return redirect()->back()->with('error', 'Only pending borrowings can be rejected.');
         }
 
         // Update status peminjaman menjadi 'rejected' dan tambahkan alasan
@@ -256,6 +256,6 @@ class AdminController extends Controller
             'reject_reason' => $request->reject_reason
         ]);
 
-        return redirect()->back()->with('success', 'Peminjaman berhasil ditolak.');
+        return redirect()->back()->with('success', 'Borrowing rejected successfully.');
     }
 }

@@ -47,7 +47,7 @@ class BarangMovementController extends Controller
 
         // Cek stok untuk pergerakan keluar
         if ($request->type == 'out' && $barang->stok < $request->quantity) {
-            return redirect()->back()->withErrors(['quantity' => 'Stok barang tidak mencukupi.'])->withInput();
+            return redirect()->back()->withErrors(['quantity' => 'Insufficient stock.'])->withInput();
         }
 
         // Update stok barang
@@ -69,7 +69,7 @@ class BarangMovementController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.movements.index')->with('success', 'Data pergerakan barang berhasil disimpan.');
+        return redirect()->route('admin.movements.index')->with('success', 'Item Movement created successfully.');
     }
 
     public function show(BarangMovement $movement){

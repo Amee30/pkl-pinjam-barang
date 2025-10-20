@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Barangs;
 use App\Models\Borrowing;
 use Illuminate\Support\Facades\Auth;  
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BorrowingController extends Controller
 {
@@ -43,7 +44,7 @@ class BorrowingController extends Controller
         $barangs = Barangs::find($request->barang_id);
 
         if ($barangs->stok < 1) {
-            return redirect()->back()->withErrors(['stock' => 'Barang Tidak Tersedia Saat Ini.']);
+            return redirect()->back()->withErrors(['stock' => 'Insufficient stock.']);
         }
 
         Borrowing::create([
@@ -55,18 +56,18 @@ class BorrowingController extends Controller
             'reason' => $request->reason,
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Permintaan Peminjaman Berhasil Diajukan.');
+        return redirect()->route('dashboard')->with('success', 'Borrowing request submitted successfully.');
     }
 
     public function returnItem(Request $request, Borrowing $borrowing){
         // Pastikan peminjaman ada dan statusnya adalah 'borrowed'
         if ($borrowing->user_id !== Auth::id()){
-            abort(403, 'Anda tidak memiliki akses untuk mengembalikan peminjaman ini.');
+            abort(403, 'You do not have access to return this borrowing.');
         }
 
         // Cek status peminjaman
         if ($borrowing->status !== 'borrowed'){
-            return redirect()->back()->with('error', 'Barang ini tidak dalam status peminjaman');
+            return redirect()->back()->with('error', 'This item is not currently borrowed.');
         }
 
         $borrowing->update(['status' => 'returned']);
@@ -78,15 +79,15 @@ class BorrowingController extends Controller
                 'barang_id' => $borrowing->barang_id,
                 'type' => 'in',
                 'quantity' => 1,
-                'source' => 'Pengembalian Peminjaman',
-                'reason' => 'Dikembalikan oleh ' . $borrowing->user->name,
+                'source' => 'Return Borrowing',
+                'reason' => 'Returned by ' . $borrowing->user->name,
                 'date' => now()->format('Y-m-d'),
-                'notes' => 'Pengembalian dari Peminjam ID ' . $borrowing->id,
+                'notes' => 'Return from Borrower ID ' . $borrowing->id,
                 'user_id' => Auth::id(),
             ]);
         }
 
-        return redirect()->route('pinjam.history')->with('success', 'Barang telah dikembalikan.');
+        return redirect()->route('pinjam.history')->with('success', 'The item has been returned.');
 
 
     }
@@ -111,7 +112,7 @@ class BorrowingController extends Controller
         
         // If not admin, check if it's their own borrowing
         if ($borrowing->user_id !== Auth::id()) {
-            abort(403, 'Anda tidak memiliki akses untuk melihat peminjaman ini.');
+            abort(403, 'You do not have access to view this borrowing.');
         }
 
         return view('borrowing.show', compact('borrowing'));
@@ -142,7 +143,7 @@ class BorrowingController extends Controller
             'return_due_date' => $request->return_due_date,
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Permintaan Peminjaman Berhasil Diperbarui.');
+        return redirect()->route('dashboard')->with('success', 'Borrowing request updated successfully.');
     }
 
     
@@ -152,11 +153,27 @@ class BorrowingController extends Controller
             abort(403);
         }
         $borrowing->delete();
-        return redirect()->route('dashboard')->with('success', 'Permintaan Peminjaman Berhasil Dibatalkan.');
+        return redirect()->route('dashboard')->with('success', 'Borrowing request cancelled successfully.');
     }
 
     public function history(){
         $borrowings = Borrowing::where('user_id', Auth::id())->with('barang')->orderBy('created_at', 'desc')->get();
         return view('borrowing.history', compact('borrowings'));
+    }
+
+    public function generateReceipt(Borrowing $borrowing)
+    {
+        // Cek apakah pengguna adalah admin atau pemilik peminjaman
+        if (Auth::id() !== $borrowing->user_id && Auth::user()->role !== 'admin') {
+            abort(403, 'Anda tidak memiliki akses ke receipt ini.');
+        }
+        
+        // Generate PDF langsung tanpa konfigurasi khusus
+        $pdf = PDF::loadView('borrowing.receipt-pdf', compact('borrowing'));
+        
+        // Set paper size ke A4
+        $pdf->setPaper('a4');
+        
+        return $pdf->stream('Nota_Peminjaman_'. $borrowing->id .'.pdf');
     }
 }

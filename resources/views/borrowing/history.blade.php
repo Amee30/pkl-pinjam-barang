@@ -20,13 +20,13 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Borrowed At</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Return Due Date</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time Remaining</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Borrowed At</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Return Due Date</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Time Remaining</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -148,19 +148,59 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div class="flex flex-col space-y-1">
-                                            <a href="{{ route('pinjam.show', $borrowing->id) }}" class="text-indigo-600 hover:text-indigo-900">Details</a>
+                                        <div class="flex items-center justify-center space-x-3">
+                                            <!-- Detail Button -->
+                                            <a href="{{ route('pinjam.show', $borrowing->id) }}" 
+                                               class="p-1 border border-gray-300 rounded-full text-indigo-600 hover:bg-indigo-100 hover:border-indigo-400 transition-colors duration-200"
+                                               title="View Details">
+                                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            </a>
+                                            
+                                            <!-- Receipt Button (untuk semua status kecuali pending dan rejected) -->
+                                            <!-- @if($borrowing->status != 'pending' && $borrowing->status != 'rejected')
+                                                <a href="{{ route('pinjam.receipt', $borrowing->id) }}" 
+                                                   target="_blank"
+                                                   class="p-1 border border-gray-300 rounded-full text-purple-600 hover:bg-purple-100 hover:border-purple-400 transition-colors duration-200"
+                                                   title="Print Receipt">
+                                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                                    </svg>
+                                                </a>
+                                            @endif -->
                                             
                                             @if($borrowing->status == 'pending')
-                                                <form action="{{ route('pinjam.destroy', $borrowing->id) }}" method="POST" class="inline">
+                                                <!-- Cancel Button -->
+                                                <form action="{{ route('pinjam.destroy', $borrowing->id) }}" 
+                                                      method="POST" 
+                                                      class="inline-flex"
+                                                      onsubmit="return confirm('Are you sure you want to cancel this borrowing?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900 text-left" onclick="return confirm('Are you sure you want to cancel this borrowing?')">Cancel</button>
+                                                    <button type="submit" 
+                                                            class="p-1 border border-gray-300 rounded-full text-red-600 hover:bg-red-100 hover:border-red-400 transition-colors duration-200"
+                                                            title="Cancel Borrowing">
+                                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
                                                 </form>
                                             @elseif($borrowing->status == 'borrowed')
-                                                <form action="{{ route('pinjam.return', $borrowing->id) }}" method="POST" class="inline">
+                                                <!-- Return Button -->
+                                                <form action="{{ route('pinjam.return', $borrowing->id) }}" 
+                                                      method="POST" 
+                                                      class="inline-flex"
+                                                      onsubmit="return confirm('Are you sure you want to return this item?')">
                                                     @csrf
-                                                    <button type="submit" class="text-blue-600 hover:text-blue-900 text-left" onclick="return confirm('Are you sure you want to return this item?')">Return</button>
+                                                    <button type="submit" 
+                                                            class="p-1 border border-gray-300 rounded-full text-blue-600 hover:bg-blue-100 hover:border-blue-400 transition-colors duration-200"
+                                                            title="Return Item">
+                                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                                                        </svg>
+                                                    </button>
                                                 </form>
                                             @endif
                                         </div>

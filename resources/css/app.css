@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Chrome, Safari, Edge, Opera */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+/* Firefox */
+input[type="date"]::-moz-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+/* Hover effect (optional) */
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    filter: invert(1) brightness(1.2);
+}
+
+

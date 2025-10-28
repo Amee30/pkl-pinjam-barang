@@ -157,23 +157,28 @@ class BorrowingController extends Controller
     }
 
     public function history(){
-        $borrowings = Borrowing::where('user_id', Auth::id())->with('barang')->orderBy('created_at', 'desc')->get();
+        $borrowings = Borrowing::where('user_id', Auth::id())->with('barang')->orderBy('created_at', 'desc')->paginate(5);
         return view('borrowing.history', compact('borrowings'));
     }
 
     public function generateReceipt(Borrowing $borrowing)
     {
-        // Cek apakah pengguna adalah admin atau pemilik peminjaman
+        // cek status peminjaman
+        if ($borrowing->status != 'approved' && $borrowing->status != 'borrowed' && $borrowing->status != 'returned') {
+            abort(403, 'Receipt can only be generated for approved, borrowed, or returned borrowings.');
+        }
+
+        // Cek apakah pengguna adalah admin 
         if (Auth::id() !== $borrowing->user_id && Auth::user()->role !== 'admin') {
-            abort(403, 'Anda tidak memiliki akses ke receipt ini.');
+            abort(403, 'You do not have access to this receipt.');
         }
         
-        // Generate PDF langsung tanpa konfigurasi khusus
+        // Generate PDF 
         $pdf = PDF::loadView('borrowing.receipt-pdf', compact('borrowing'));
         
         // Set paper size ke A4
         $pdf->setPaper('a4');
         
-        return $pdf->stream('Nota_Peminjaman_'. $borrowing->id .'.pdf');
+        return $pdf->stream('Borrowing_Receipt_'. $borrowing->id .'.pdf');
     }
 }

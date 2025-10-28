@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Nota Peminjaman Barang</title>
+    <title>Borrowing Receipt</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -111,8 +111,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>NOTA PEMINJAMAN BARANG</h1>
-            <p>Fairfield by Marriott Kuta Sunset Road</p>
+            <img src="{{ public_path('FF_Sunset_Logo.jpg') }}" alt="Company Logo" class="logo">
             <p>Jl. Merdeka Raya No.VII, Abianbase, Kec. Kuta, Kabupaten Badung, Bali 80361</p>
         </div>
         
@@ -122,19 +121,19 @@
                 <div class="info-value">BRW-{{ str_pad($borrowing->id, 5, '0', STR_PAD_LEFT) }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Tanggal:</div>
+                <div class="info-label">Date:</div>
                 <div class="info-value">{{ \Carbon\Carbon::parse($borrowing->created_at)->format('d/m/Y') }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Telah diterima dari:</div>
+                <div class="info-label">Received from:</div>
                 <div class="info-value">{{ $borrowing->user->name }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Departemen:</div>
+                <div class="info-label">Department:</div>
                 <div class="info-value">{{ $borrowing->user->department ?? 'Tidak Ada' }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Telepon:</div>
+                <div class="info-label">Phone:</div>
                 <div class="info-value">{{ $borrowing->user->phone_number ?? 'Tidak Ada' }}</div>
             </div>
             <div class="clear"></div>
@@ -144,7 +143,7 @@
             <thead>
                 <tr>
                     <th width="10%">No</th>
-                    <th width="60%">Nama Barang</th>
+                    <th width="60%">Item Name</th>
                     <th width="30%">Serial Number</th>
                 </tr>
             </thead>
@@ -154,29 +153,34 @@
                     <td>{{ $borrowing->barang->nama_barang }}</td>
                     <td>{{ $borrowing->barang->serial_number ?? 'Tidak Ada' }}</td>
                 </tr>
-                {{-- Jika memiliki beberapa barang, bisa di-loop di sini --}}
             </tbody>
         </table>
 
         <div class="info-row">
-            <div class="info-label">Tanggal kembali:</div>
+            <div class="info-label">Date Returned:</div>
             <div class="info-value">{{ \Carbon\Carbon::parse($borrowing->return_due_date)->format('d/m/Y') }}</div>
         </div>
         <div class="clear"></div>
         
         <div class="notes">
             <p><strong>NB:</strong></p>
-            <p>- Apabila barang rusak, jadi tanggung jawab peminjam</p>
-        </div>
+            <p>- If the item is damaged, the borrower is responsible</p>
+        </div> 
         
         <div class="signature-section">
             <div class="signature-box">
                 <div class="signature-line"></div>
-                <p>Telah diterima dari</p>
+                <p>Received From</p>
+                <br>
+                <br>
+                <p>{{ Auth::user()->name }}</p>
             </div>
             <div class="signature-box">
                 <div class="signature-line"></div>
-                <p>Penerima</p>
+                <p>Received by</p>
+                <br>
+                <br>
+                <p>{{ $borrowing->user->name }}</p>
             </div>
             <div class="clear"></div>
         </div>

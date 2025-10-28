@@ -24,13 +24,6 @@
                             <div class="border rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
                                 <!-- Bagian Gambar -->
                                 <div class="relative">
-                                    @if($barang->stok > 0)
-                                        <!-- Badge untuk status barang -->
-                                        <div class="absolute top-2 right-2 bg-blue-500 text-white rounded-full px-2 py-1 text-xs font-semibold">
-                                            Available
-                                        </div>
-                                    @endif
-
                                     @if($barang->foto)
                                         <div class="flex justify-center items-center bg-white h-48 p-4">
                                             <img src="{{ asset('storage/' . $barang->foto) }}" alt="{{ $barang->nama_barang }}" 

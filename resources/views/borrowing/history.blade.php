@@ -16,89 +16,173 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Borrowed At</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Return Due Date</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse($borrowings as $borrowing)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                     @if($borrowing->barang->foto)
-                                        <img src="{{ asset('storage/' . $borrowing->barang->foto) }}" alt="{{ $borrowing->barang->nama_barang }}" class="w-20 h-20 object-contain border rounded">
-                                    @else
-                                        <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
-                                            <span class="text-gray-500 text-xs">No Photo</span>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Borrowed At</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Return Due Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time Remaining</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @forelse($borrowings as $borrowing)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                         @if($borrowing->barang->foto)
+                                            <img src="{{ asset('storage/' . $borrowing->barang->foto) }}" alt="{{ $borrowing->barang->nama_barang }}" class="w-20 h-20 object-contain border rounded">
+                                        @else
+                                            <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                                                <span class="text-gray-500 text-xs">No Photo</span>
+                                            </div>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">{{ $borrowing->barang->nama_barang }}</div>
+                                                <div class="text-sm text-gray-500">{{ $borrowing->barang->kategori }}</div>
+                                            </div>
                                         </div>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">{{ $borrowing->barang->nama_barang }}</div>
-                                            <div class="text-sm text-gray-500">{{ $borrowing->barang->kategori }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ \Carbon\Carbon::parse($borrowing->borrowed_at)->format('d/m/Y') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ \Carbon\Carbon::parse($borrowing->return_due_date)->format('d/m/Y') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        @if($borrowing->status == 'returned')
+                                            <span class="text-green-600 font-medium">Already returned</span>
+                                        @elseif($borrowing->status == 'rejected')
+                                            <span class="text-red-600 font-medium">Borrowing rejected</span>
+                                        @elseif($borrowing->status == 'pending')
+                                            <span class="text-yellow-600 font-medium">Awaiting approval</span>
+                                        @else
+                                            @php
+                                                $now = \Carbon\Carbon::now();
+                                                $dueDate = \Carbon\Carbon::parse($borrowing->return_due_date);
+                                                
+                                                // Use interval for more accurate calculation
+                                                $interval = $now->diff($dueDate);
+                                                $isOverdue = !$interval->invert ? false : true;
+                                                
+                                                if ($isOverdue) {
+                                                    // Overdue
+                                                    $days = $interval->days;
+                                                    $hours = $interval->h;
+                                                    $displayText = "Overdue " . $days . " day" . ($days > 1 ? 's' : '');
+                                                    if ($hours > 0) {
+                                                        $displayText .= ", " . $hours . " hour" . ($hours > 1 ? 's' : '');
+                                                    }
+                                                    $textColor = "text-red-600";
+                                                } elseif ($interval->days == 0) {
+                                                    // Today
+                                                    $hours = $interval->h;
+                                                    if ($hours > 0) {
+                                                        $displayText = $hours . " hour" . ($hours > 1 ? 's' : '') . " left";
+                                                        $textColor = "text-yellow-600";
+                                                    } else {
+                                                        $minutes = $interval->i;
+                                                        if ($minutes > 0) {
+                                                            $displayText = $minutes . " minute" . ($minutes > 1 ? 's' : '') . " left";
+                                                            $textColor = "text-red-500";
+                                                        } else {
+                                                            $displayText = "Time's up";
+                                                            $textColor = "text-red-600";
+                                                        }
+                                                    }
+                                                } else {
+                                                    // Days remaining
+                                                    $days = $interval->days;
+                                                    $hours = $interval->h;
+                                                    
+                                                    if ($days == 1) {
+                                                        $displayText = "1 day";
+                                                        if ($hours > 0) {
+                                                            $displayText .= ", " . $hours . " hour" . ($hours > 1 ? 's' : '') . " left";
+                                                        } else {
+                                                            $displayText .= " left";
+                                                        }
+                                                        $textColor = "text-yellow-600";
+                                                    } else {
+                                                        $displayText = $days . " days";
+                                                        if ($hours > 0) {
+                                                            $displayText .= ", " . $hours . " hour" . ($hours > 1 ? 's' : '') . " left";
+                                                        } else {
+                                                            $displayText .= " left";
+                                                        }
+                                                        $textColor = $days <= 3 ? "text-yellow-600" : "text-blue-600";
+                                                    }
+                                                }
+                                            @endphp
+                                            
+                                            <span class="{{ $textColor }} font-medium">{{ $displayText }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($borrowing->status == 'pending')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                Waiting for Approval
+                                            </span>
+                                        @elseif($borrowing->status == 'borrowed')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                Currently Borrowed
+                                            </span>
+                                        @elseif($borrowing->status == 'returned')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Returned
+                                            </span>
+                                        @elseif($borrowing->status == 'rejected')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                Rejected
+                                            </span>
+                                        @else
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                Overdue
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <div class="flex flex-col space-y-1">
+                                            <a href="{{ route('pinjam.show', $borrowing->id) }}" class="text-indigo-600 hover:text-indigo-900">Details</a>
+                                            
+                                            @if($borrowing->status == 'pending')
+                                                <form action="{{ route('pinjam.destroy', $borrowing->id) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900 text-left" onclick="return confirm('Are you sure you want to cancel this borrowing?')">Cancel</button>
+                                                </form>
+                                            @elseif($borrowing->status == 'borrowed')
+                                                <form action="{{ route('pinjam.return', $borrowing->id) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    <button type="submit" class="text-blue-600 hover:text-blue-900 text-left" onclick="return confirm('Are you sure you want to return this item?')">Return</button>
+                                                </form>
+                                            @endif
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ \Carbon\Carbon::parse($borrowing->borrowed_at)->format('d/m/Y') }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ \Carbon\Carbon::parse($borrowing->return_due_date)->format('d/m/Y') }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($borrowing->status == 'pending')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                            Waiting for Approval
-                                        </span>
-                                    @elseif($borrowing->status == 'borrowed')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                            Currently Borrowed
-                                        </span>
-                                    @elseif($borrowing->status == 'returned')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Returned
-                                        </span>
-                                    @elseif($borrowing->status == 'rejected')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            Rejected
-                                        </span>
-                                    @else
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            Overdue
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    @if($borrowing->status == 'pending')
-                                        <form action="{{ route('pinjam.destroy', $borrowing->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to cancel this borrowing?')">Cancel</button>
-                                        </form>
-                                    @elseif($borrowing->status == 'borrowed')
-                                        <a href="{{ route('pinjam.show', $borrowing->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Detail</a>
-                                        <form action="{{ route('pinjam.return', $borrowing->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" class="text-blue-600 hover:text-blue-900" onclick="return confirm('Are you sure you want to return this item?')">Return</button>
-                                        </form>
-                                    @else
-                                        <a href="{{ route('pinjam.show', $borrowing->id) }}" class="text-indigo-600 hover:text-indigo-900">Details</a>
-                                    @endif
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                                   You haven't borrowed anything yet.
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                       You haven't borrowed anything yet.
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination if available -->
+                    @if(method_exists($borrowings, 'hasPages') && $borrowings->hasPages())
+                        <div class="mt-4">
+                            {{ $borrowings->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -109,7 +193,7 @@
             <div class="md:flex md:items-center md:justify-between"> 
                 <div class="mt-8 md:mt-0 flex items-center justify-center md:justify-end">
                     <div class="text-sm text-white">
-                        &copy; {{ date('Y') }} Sistem Peminjaman Barang. All rights reserved.
+                        &copy; {{ date('Y') }} Item Borrowing System. All rights reserved.
                     </div>
                 </div>
             </div>

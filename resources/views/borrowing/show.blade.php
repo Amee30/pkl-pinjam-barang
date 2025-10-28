@@ -264,32 +264,13 @@
                         @endif
                     </div>
 
-                    <!-- Tombol Aksi -->
-                    <div class="mt-6 flex justify-end">
-                        @if($borrowing->status == 'pending' && $borrowing->user_id == Auth::id())
-                            <form action="{{ route('pinjam.destroy', $borrowing->id) }}" method="POST" class="ml-2">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700" onclick="return confirm('Are you sure you want to cancel this borrowing?')">
-                                    Cancel Borrowing
-                                </button>
-                            </form>
-                        @elseif($borrowing->status == 'borrowed' && $borrowing->user_id == Auth::id())
-                            <form action="{{ route('pinjam.return', $borrowing->id) }}" method="POST" class="ml-2">
-                                @csrf
-                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700" onclick="return confirm('Are you sure you want to return this item?')">
-                                    Return Item
-                                </button>
-                            </form>
-                        @endif
-                        
-                        @if(Auth::user()->role == 'admin')
-                            @if($borrowing->status == 'pending')
-                                <!-- Tombol approval admin tetap ada -->
-                            @elseif($borrowing->status == 'borrowed')
-                                <!-- Tombol return admin tetap ada -->
-                            @endif
-                        @endif
+                    <div class="mt-6 flex space-x-4">
+                        <a href="{{ route('pinjam.receipt', $borrowing->id) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:bg-blue-700">
+                            <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                            </svg>
+                            Cetak Nota Peminjaman
+                        </a>
                     </div>
                 </div>
             </div>

@@ -44,55 +44,163 @@ class AdminController extends Controller
 
         // Update status peminjaman menjadi 'borrowed'
         $borrowing->update(
-            ['status' => 'borrowed']
+            ['status' => 'waiting_pickup']
         );
 
         // Kurangi stok barang
-        $borrowing->barang->decrement('stok');
+        // $borrowing->barang->decrement('stok');
 
         // Catat pergerakan barang keluar
-        BarangMovement::create(
-            [
-                'barang_id' => $borrowing->barang_id,
-                'type' => 'out',
-                'quantity' => 1,
-                'source' => null,
-                'reason' => 'Borrowed by '. $borrowing->user->name,
-                'date' => now()->format('Y-m-d'),
-                'notes' => 'Borrower ID'. $borrowing->user_id,
-                'user_id' => Auth::id(),
-            ]
-            );
+        // BarangMovement::create(
+        //     [
+        //         'barang_id' => $borrowing->barang_id,
+        //         'type' => 'out',
+        //         'quantity' => 1,
+        //         'source' => null,
+        //         'reason' => 'Borrowed by '. $borrowing->user->name,
+        //         'date' => now()->format('Y-m-d'),
+        //         'notes' => 'Borrower ID'. $borrowing->user_id,
+        //         'user_id' => Auth::id(),
+        //     ]
+        //     );
 
-        return redirect()->back()->with('success', 'Borrowing approved.');
+        return redirect()->back()->with('success', 'Borrowing approved. The item is ready for pickup.');
     }
 
-    public function return(Request $request, $borrowing_id)
+    public function scanPickup(Request $request)
     {
-        // Temukan peminjam berdasarkan ID
-        $borrowing = Borrowing::with('barang', 'user')->findOrFail($borrowing_id);
+        $request->validate([
+            'qr_code' => 'required|string',
+        ]);
 
-        // Pastikan peminjaman ada dan statusnya adalah 'borrowed'
-        $borrowing->update(['status' => 'returned']);
+        $barang = Barangs::where('qr_code', $request->qr_code)->first();
 
-        if ($borrowing->barang) {
-            $borrowing->barang->increment('stok');
-            // Catat pergerakan barang masuk
-            BarangMovement::create([
-                'barang_id' => $borrowing->barang_id,
-                'type' => 'in',
-                'quantity' => 1,
-                'source' => 'Return Borrowing',
-                'reason' => 'Returned by ' . $borrowing->user->name,
-                'date' => now()->format('Y-m-d'),
-                'notes' => 'Return from Borrower ID ' . $borrowing->id,
-                'user_id' => Auth::id(),
-            ]);
+        if (!$barang) {
+            return response()->json([
+                'success' => false,
+                'message' => 'QR code not recognized.',
+            ], 404);
         }
 
+        $borrowing = Borrowing::where('barang_id', $barang->id)
+            ->where('status', 'waiting_pickup')
+            ->orderBy('created_at', 'desc')
+            ->first();
+        if (!$borrowing) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No pending pickup found for this item.',
+            ], 404);
+        }
 
-        return redirect()->back()->with('success', 'The item has been returned.');
+        $borrowing->update(['status' => 'borrowed']);
+        $barang->decrement('stok');
+
+        BarangMovement::create([
+            'barang_id' => $barang->id,
+            'type' => 'out',
+            'quantity' => 1,
+            'source' => null,
+            'reason' => 'Borrowed by ' . $borrowing->user->name,
+            'date' => now()->format('Y-m-d'),
+            'notes' => 'Borrower ID ' . $borrowing->user_id,
+            'user_id' => Auth::id(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pickup successful. The item has been borrowed.',
+            'data' => [
+                'barang' => $barang->nama_barang,
+                'peminjam' => $borrowing->user->name,
+                'tanggal_kembali' => $borrowing->return_due_date,
+            ],
+        ]);
     }
+
+    public function scanReturn(Request $request)
+    {
+        $request->validate([
+            'qr_code' => 'required|string',
+        ]);
+
+        $barang = Barangs::where('qr_code', $request->qr_code)->first();
+
+        if (!$barang) {
+            return response()->json([
+                'success' => false,
+                'message' => 'QR code not recognized.',
+            ], 404);
+        }
+
+        $borrowing = Borrowing::where('barang_id', $barang->id)
+            ->where('status', 'waiting_return')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (!$borrowing) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No active borrowing found for this item.',
+            ], 404);
+        }
+
+        $borrowing->update(['status' => 'returned']);
+        $barang->increment('stok');
+
+        BarangMovement::create([
+            'barang_id' => $barang->id,
+            'type' => 'in',
+            'quantity' => 1,
+            'source' => 'Return Borrowing',
+            'reason' => 'Returned by ' . $borrowing->user->name,
+            'date' => now()->format('Y-m-d'),
+            'notes' => 'Return from Borrower ID ' . $borrowing->id,
+            'user_id' => Auth::id(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Return successful. The item has been returned.',
+            'data' => [
+                'barang' => $barang->nama_barang,
+                'peminjam' => $borrowing->user->name,
+                'tanggal_kembali' => $borrowing->return_due_date,
+            ],
+        ]);
+    }
+
+    public function showQrScanner()
+    {
+        return view('admin.qr-scanner');
+    }
+
+    // public function return(Request $request, $borrowing_id)
+    // {
+    //     // Temukan peminjam berdasarkan ID
+    //     $borrowing = Borrowing::with('barang', 'user')->findOrFail($borrowing_id);
+
+    //     // Pastikan peminjaman ada dan statusnya adalah 'borrowed'
+    //     $borrowing->update(['status' => 'returned']);
+
+    //     if ($borrowing->barang) {
+    //         $borrowing->barang->increment('stok');
+    //         // Catat pergerakan barang masuk
+    //         BarangMovement::create([
+    //             'barang_id' => $borrowing->barang_id,
+    //             'type' => 'in',
+    //             'quantity' => 1,
+    //             'source' => 'Return Borrowing',
+    //             'reason' => 'Returned by ' . $borrowing->user->name,
+    //             'date' => now()->format('Y-m-d'),
+    //             'notes' => 'Return from Borrower ID ' . $borrowing->id,
+    //             'user_id' => Auth::id(),
+    //         ]);
+    //     }
+
+
+    //     return redirect()->back()->with('success', 'The item has been returned.');
+    // }
 
     
     /**
@@ -173,10 +281,17 @@ class AdminController extends Controller
         return view('admin.barangs.show', compact('barang'));
     }
 
+    /**
+     * Get item details for AJAX request
+     */
     public function getDetails(string $id)
     {
-        $barang = Barangs::findOrFail($id);
-        return response()->json($barang);
+        try {
+            $barang = Barangs::findOrFail($id);
+            return response()->json($barang);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Item not found'], 404);
+        }
     }
 
     /**
@@ -271,5 +386,29 @@ class AdminController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Borrowing rejected successfully.');
+    }
+
+    /**
+     * Generate kode qr code for AJAX request
+     */
+    public function getQrCode($id)
+    {
+        try {
+            $barang = Barangs::findOrFail($id);
+            
+            // Generate QR Code sebagai string
+            $qrCodeSvg = $barang->generateQrCodeImage();
+            
+            return response()->json([
+                'qr_code' => $qrCodeSvg, 
+                'code' => $barang->qr_code,
+                'nama_barang' => $barang->nama_barang
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'QR Code not found',
+                'message' => $e->getMessage()
+            ], 404);
+        }
     }
 }

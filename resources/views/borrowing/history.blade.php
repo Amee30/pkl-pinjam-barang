@@ -32,7 +32,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($borrowings as $borrowing)
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                          @if($borrowing->barang->foto)
                                             <img src="{{ asset('storage/' . $borrowing->barang->foto) }}" alt="{{ $borrowing->barang->nama_barang }}" class="w-20 h-20 object-contain border rounded">
                                         @else
@@ -42,20 +42,20 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
+                                        <div class="flex text-center">
                                             <div>
                                                 <div class="text-sm font-medium text-gray-900">{{ $borrowing->barang->nama_barang }}</div>
                                                 <div class="text-sm text-gray-500">{{ $borrowing->barang->kategori }}</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">
                                         {{ \Carbon\Carbon::parse($borrowing->borrowed_at)->format('d/m/Y') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900">
                                         {{ \Carbon\Carbon::parse($borrowing->return_due_date)->format('d/m/Y') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                                         @if($borrowing->status == 'returned')
                                             <span class="text-green-600 font-medium">Already returned</span>
                                         @elseif($borrowing->status == 'rejected')
@@ -124,14 +124,22 @@
                                             <span class="{{ $textColor }} font-medium">{{ $displayText }}</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
                                         @if($borrowing->status == 'pending')
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                                 Waiting for Approval
                                             </span>
+                                        @elseif($borrowing->status == 'waiting_pickup')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                Waiting for Pickup
+                                            </span>
                                         @elseif($borrowing->status == 'borrowed')
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                                                 Currently Borrowed
+                                            </span>
+                                        @elseif($borrowing->status == 'waiting_return')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                                Waiting for Return
                                             </span>
                                         @elseif($borrowing->status == 'returned')
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
@@ -171,12 +179,12 @@
                                                 </a>
                                             @endif -->
                                             
+                                            <!-- Edit Button (hanya untuk status pending) -->
                                             @if($borrowing->status == 'pending')
-                                                <!-- Cancel Button -->
-                                                <form action="{{ route('pinjam.destroy', $borrowing->id) }}" 
-                                                      method="POST" 
-                                                      class="inline-flex"
-                                                      onsubmit="return confirm('Are you sure you want to cancel this borrowing?')">
+                                                    <form action="{{ route('pinjam.destroy', $borrowing->id) }}" 
+                                                    method="POST" 
+                                                    class="inline-flex"
+                                                    onsubmit="return confirm('Are you sure you want to cancel this borrowing?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" 
@@ -187,21 +195,30 @@
                                                         </svg>
                                                     </button>
                                                 </form>
-                                            @elseif($borrowing->status == 'borrowed')
-                                                <!-- Return Button -->
-                                                <form action="{{ route('pinjam.return', $borrowing->id) }}" 
-                                                      method="POST" 
-                                                      class="inline-flex"
-                                                      onsubmit="return confirm('Are you sure you want to return this item?')">
+                                            @endif
+
+                                            <!-- Request Return Button (untuk status borrowed) -->
+                                            @if($borrowing->status == 'borrowed')
+                                                <form action="{{ route('pinjam.return', $borrowing->id) }}" method="POST" class="inline" 
+                                                      onsubmit="return confirm('Are you sure you want to request return for this item? Please bring the item to admin for scanning.')">
                                                     @csrf
-                                                    <button type="submit" 
-                                                            class="p-1 border border-gray-300 rounded-full text-blue-600 hover:bg-blue-100 hover:border-blue-400 transition-colors duration-200"
-                                                            title="Return Item">
-                                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <button type="submit"
+                                                            class="p-1 border border-gray-300 rounded-full text-green-600 hover:bg-green-100 hover:border-green-400 transition-colors duration-200"
+                                                            title="Request Return">
+                                                        <svg class="h-4 w-4 sm:h-5 sm:w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                                                         </svg>
                                                     </button>
                                                 </form>
+                                            @endif
+
+                                            <!-- Waiting Return Info -->
+                                            @if($borrowing->status == 'waiting_return')
+                                                <span class="p-1 text-xs text-orange-600" title="Waiting for admin to scan return">
+                                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 inline animate-pulse" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                </span>
                                             @endif
                                         </div>
                                     </td>

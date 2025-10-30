@@ -98,10 +98,24 @@ class AdminController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $barangs = Barangs::paginate(5); 
-        return view('admin.barangs.index', compact('barangs'));
+        $kategori = $request->input('kategori');
+
+        $barangsQuery = Barangs::query();
+
+        if ($kategori && $kategori !== 'All') {
+            $barangsQuery->where('kategori', $kategori);
+        }
+
+        $barangs = $barangsQuery->paginate(5);
+
+        $categories = Barangs::select('kategori')
+            ->distinct()
+            ->orderBy('kategori')
+            ->pluck('kategori');
+
+        return view('admin.barangs.index', compact('barangs', 'categories', 'kategori'));
     }
 
     /**

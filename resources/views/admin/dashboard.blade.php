@@ -9,7 +9,7 @@
                 @endif
     
                 <!-- Statistik Dashboard -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6 sm:mb-8 mt-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6 sm:mb-8 mt-4">
                     <!-- Total Stok Barang -->
                     <div class="bg-white overflow-hidden shadow rounded-lg p-4">
                         <div class="flex items-center">
@@ -95,8 +95,8 @@
                         </div>
                     </div>
                     
-                    <!-- Total Pengguna -->
-                    <div class="bg-white overflow-hidden shadow rounded-lg p-4">
+                    <!-- Total Pengguna - Di baris bawah pada desktop -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg p-4 sm:col-span-2 lg:col-span-1">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 mr-3">
                                 <div class="h-10 w-10 bg-indigo-100 rounded-lg flex items-center justify-center">

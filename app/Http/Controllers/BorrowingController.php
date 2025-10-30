@@ -13,12 +13,29 @@ class BorrowingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $barangs = Barangs::all();
+        // Get filter kategori dari request
+        $kategori = $request->get('kategori');
+        
+        // Query barang dengan filter
+        $barangsQuery = Barangs::query();
+        
+        if ($kategori && $kategori !== 'all') {
+            $barangsQuery->where('kategori', $kategori);
+        }
+        
+        $barangs = $barangsQuery->get();
+        
+        // Get semua kategori unik untuk dropdown
+        $categories = Barangs::select('kategori')
+            ->distinct()
+            ->orderBy('kategori')
+            ->pluck('kategori');
+        
         $borrowings = Borrowing::where('user_id', Auth::id())->with('barang')->get();
 
-        return view('dashboard', compact('barangs', 'borrowings'));
+        return view('dashboard', compact('barangs', 'borrowings', 'categories', 'kategori'));
     }
 
     /**

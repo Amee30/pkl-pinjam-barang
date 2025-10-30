@@ -12,12 +12,62 @@
                 <div>
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 text-gray-900">
-                            <div class="flex justify-between mb-4">
+                            <!-- Header dengan Title, Filter, dan Add Button -->
+                            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 gap-4">
                                 <h3 class="text-lg font-medium">Item List</h3>
-                                <a href="{{ route('admin.barang.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Add Item
-                                </a>
+                                
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
+                                    <!-- Category Filter -->
+                                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                                        <label for="categoryFilter" class="text-sm font-medium text-gray-700 whitespace-nowrap">
+                                            Filter:
+                                        </label>
+                                        <form method="GET" action="{{ route('admin.barang.index') }}" id="filterForm" class="flex items-center gap-2 flex-1 sm:flex-none">
+                                            <select 
+                                                id="categoryFilter" 
+                                                name="kategori" 
+                                                onchange="document.getElementById('filterForm').submit()"
+                                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm py-2 px-3 min-w-[150px]">
+                                                <option value="all" {{ (!request('kategori') || request('kategori') == 'all') ? 'selected' : '' }}>
+                                                    All Categories
+                                                </option>
+                                                @foreach($categories as $category)
+                                                    <option value="{{ $category }}" {{ request('kategori') == $category ? 'selected' : '' }}>
+                                                        {{ $category }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            
+                                            @if(request('kategori') && request('kategori') !== 'all')
+                                                <a href="{{ route('admin.barang.index') }}" 
+                                                   class="inline-flex items-center px-2 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-medium rounded-md transition-colors duration-200"
+                                                   title="Clear Filter">
+                                                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </a>
+                                            @endif
+                                        </form>
+                                    </div>
+
+                                    <!-- Add Item Button -->
+                                    <a href="{{ route('admin.barang.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded whitespace-nowrap w-full sm:w-auto text-center">
+                                        Add Item
+                                    </a>
+                                </div>
                             </div>
+
+                            <!-- Filter Info Badge (Optional) -->
+                            @if(request('kategori') && request('kategori') !== 'all')
+                                <div class="mb-4">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                        <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                                        </svg>
+                                        Filtered by: {{ request('kategori') }}
+                                    </span>
+                                </div>
+                            @endif
         
                             <!-- Tabel barang dengan lebar penuh -->
                             <div class="overflow-x-auto">
@@ -63,11 +113,11 @@
                                                         </span>
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                                        <div class="flex items-center justify-center space-x-2">
+                                                        <div class="flex items-center justify-center space-x-3">
                                                             <!-- Details Button -->
                                                             <button type="button" 
                                                                 onclick="showModal('{{ $barang->id }}')"
-                                                                class="p-1 border rounded-full text-blue-600 hover:text-blue-900"
+                                                                class="p-1 border border-gray-300 rounded-full text-blue-600 hover:bg-blue-100 hover:border-blue-400 transition-colors duration-200"
                                                                 title="View Details">
                                                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -77,7 +127,7 @@
                                                             
                                                             <!-- Edit Button -->
                                                             <a href="{{ route('admin.barang.edit', $barang->id) }}" 
-                                                               class="p-1 border rounded-full text-indigo-600 hover:text-indigo-900"
+                                                               class="p-1 border border-gray-300 rounded-full text-indigo-600 hover:bg-indigo-100 hover:border-indigo-400 transition-colors duration-200"
                                                                title="Edit Item">
                                                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -92,7 +142,7 @@
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" 
-                                                                        class="p-1 border rounded-full text-red-600 hover:text-red-900"
+                                                                        class="p-1 border border-gray-300 rounded-full text-red-600 hover:bg-red-100 hover:border-red-400 transition-colors duration-200"
                                                                         title="Delete Item">
                                                                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -109,8 +159,20 @@
                                                             <svg class="w-12 h-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8l-4 4-3-3-6 6"></path>
                                                             </svg>
-                                                            <h3 class="text-sm font-medium text-gray-900 mb-1">Belum ada data barang</h3>
-                                                            <p class="text-sm text-gray-500">Mulai dengan menambahkan barang pertama Anda.</p>
+                                                            <h3 class="text-sm font-medium text-gray-900 mb-1">
+                                                                @if(request('kategori') && request('kategori') !== 'all')
+                                                                    No items found in "{{ request('kategori') }}" category
+                                                                @else
+                                                                    No item data available
+                                                                @endif
+                                                            </h3>
+                                                            <p class="text-sm text-gray-500">
+                                                                @if(request('kategori') && request('kategori') !== 'all')
+                                                                    Try selecting a different category or clear the filter.
+                                                                @else
+                                                                    Start by adding your first item.
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -127,7 +189,7 @@
                     @if($barangs->hasPages())
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4">
                             <div class="p-4">
-                                {{ $barangs->links() }}
+                                {{ $barangs->appends(['kategori' => request('kategori')])->links() }}
                             </div>
                         </div>
                     @endif

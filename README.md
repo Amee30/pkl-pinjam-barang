@@ -205,13 +205,13 @@ Aplikasi ini fully responsive dan dapat diakses dengan baik di:
 - Tablet (768px - 1023px)
 - Mobile (< 768px)
 
-## 📝 License
+<!-- ## 📝 License
 
-Project ini adalah open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Project ini adalah open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT). -->
 
 ## 👨‍💻 Developer
 
-Developed with ❤️ by Darma
+Developed with ❤️ by Darma and AI
 
 ## 📧 Contact
 - Email: darmaputra2017@gmail.com

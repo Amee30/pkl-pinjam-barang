@@ -1,61 +1,219 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📦 Sistem Manajemen Inventaris dan Peminjaman Barang (Item Borrowing System)
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
 </p>
 
-## About Laravel
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12.0-red.svg" alt="Laravel Version">
+  <img src="https://img.shields.io/badge/PHP-8.2+-blue.svg" alt="PHP Version">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Deskripsi Project
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Sistem Peminjaman Barang adalah aplikasi web berbasis Laravel yang dirancang untuk mengelola peminjaman dan pengembalian barang secara efisien. Sistem ini dilengkapi dengan fitur QR Code untuk tracking barang, laporan PDF, dan export data ke Excel.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+NOTE: Project ini dibuat untuk keperluan Magang saya
 
-## Learning Laravel
+## ✨ Fitur Utama
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 👤 User Features
+- **Dashboard User**: Melihat daftar barang yang tersedia untuk dipinjam
+- **Peminjaman Barang**: Submit request peminjaman barang
+- **Riwayat Peminjaman**: Melihat history peminjaman dengan berbagai status
+- **Receipt PDF**: Download bukti peminjaman dalam format PDF
+- **Real-time Status**: Tracking status peminjaman (Pending, Approved, Borrowed, Returned, Rejected)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 👨‍💼 Admin Features
+- **Dashboard Admin**: Overview statistik sistem (Total Barang, Users, Peminjaman, dll)
+- **Manajemen Barang**: 
+  - CRUD barang dengan foto
+  - Generate QR Code untuk setiap barang
+  - Print QR Code
+  - Serial number tracking
+  - Stock management
+- **Manajemen User**: CRUD user dengan role management (Admin/User)
+- **Manajemen Peminjaman**: 
+  - Approve/Reject request peminjaman
+  - Tandai barang sebagai borrowed/returned
+  - View detail peminjaman
+- **Movement History**: Tracking pergerakan barang
+- **Export Data**: Export data ke Excel (Barang, Users, Borrowings, Movements)
+- **Search & Filter**: Pencarian dan filter data dengan mudah
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Tech Stack
 
-## Laravel Sponsors
+- **Framework**: Laravel 12.0
+- **PHP**: 8.2+
+- **Database**: MySQL/PostgreSQL
+- **Frontend**: 
+  - Tailwind CSS
+  - Alpine.js (via Laravel Breeze)
+- **Packages**:
+  - `barryvdh/laravel-dompdf` - Generate PDF
+  - `maatwebsite/excel` - Export to Excel
+  - `simplesoftwareio/simple-qrcode` - Generate QR Code
+  - `laravel/breeze` - Authentication
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 📦 Instalasi
 
-### Premium Partners
+### Prerequisites
+- PHP >= 8.2
+- Composer
+- MySQL/PostgreSQL
+- Node.js & NPM
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Langkah Instalasi
 
-## Contributing
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/username/pkl-pinjam-barang.git
+   cd pkl-pinjam-barang
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2. **Install Dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-## Code of Conduct
+3. **Environment Setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. **Database Configuration**
+   
+   Edit file `.env` sesuai dengan konfigurasi database Anda:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=pinjam_barang
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-## Security Vulnerabilities
+5. **Run Migration & Seeder**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+6. **Storage Link**
+   ```bash
+   php artisan storage:link
+   ```
 
-## License
+7. **Build Assets**
+   ```bash
+   npm run dev
+   # or for production
+   npm run build
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+8. **Run Application**
+   ```bash
+   php artisan serve
+   ```
+
+   Aplikasi akan berjalan di `http://localhost:8000`
+
+## 👥 Default Credentials
+
+Setelah menjalankan seeder, gunakan credentials berikut:
+
+**Admin:**
+- Email: `admin@example.com`
+- Password: `password`
+
+**User:**
+- Email: `user@example.com`
+- Password: `password`
+
+## 📁 Struktur Database
+
+### Tables
+- `users` - Data pengguna (admin & user)
+- `barangs` - Data barang
+- `borrowings` - Data peminjaman
+- `movements` - History pergerakan barang
+
+## 🎯 Cara Penggunaan
+
+### Untuk User:
+1. Login ke sistem
+2. Browse barang yang tersedia di dashboard
+3. Klik "Borrow Now" untuk mengajukan peminjaman
+4. Tunggu approval dari admin
+5. Lihat status peminjaman di "Borrowing History"
+6. Jika status Waiting Pickup silahkan ke lokasi pengambilan barang
+
+### Untuk Admin:
+1. Login sebagai admin
+2. Kelola data barang, user, dan peminjaman
+3. Approve/reject request peminjaman
+4. Tandai barang sebagai borrowed/returned
+5. Monitor pergerakan barang di Movement History
+6. Export data untuk reporting
+7. Print Receipt ketika sudah mengapprove peminjaman
+8. Scan QR untuk memvalidasi pengambilan barang dan pengembalian barang
+
+## 📸 Screenshots
+
+### User Dashboard
+Menampilkan daftar barang yang tersedia untuk dipinjam dengan informasi stok dan status.
+
+### Admin Dashboard
+Overview statistik sistem dengan chart dan quick actions.
+
+### QR Code Feature
+Generate dan print QR code untuk setiap barang untuk memudahkan proses validasi pengambilan barang dan pengembalian.
+
+### Borrowing Management
+Interface untuk mengelola request peminjaman dengan status tracking.
+
+## 🔐 Security Features
+
+- Authentication dengan Laravel Breeze
+- Role-based Access Control (Admin/User)
+- CSRF Protection
+- XSS Protection
+- SQL Injection Prevention
+- Password Hashing
+
+## 📱 Responsive Design
+
+Aplikasi ini fully responsive dan dapat diakses dengan baik di:
+- Desktop (1920px+)
+- Laptop (1024px - 1919px)
+- Tablet (768px - 1023px)
+- Mobile (< 768px)
+
+## 📝 License
+
+Project ini adalah open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 👨‍💻 Developer
+
+Developed with ❤️ by Darma
+
+## 📧 Contact
+- Email: darmaputra2017@gmail.com
+- GitHub: [@Amee30](https://github.com/Amee30)
+
+## 🙏 Acknowledgments
+
+- [Laravel](https://laravel.com) - The PHP Framework
+- [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
+- [Alpine.js](https://alpinejs.dev) - Lightweight JavaScript framework
+- [Simple QR Code](https://www.simplesoftware.io) - QR Code generator
+- [DomPDF](https://github.com/dompdf/dompdf) - PDF generator
+- [Laravel Excel](https://laravel-excel.com) - Excel export/import
+
+---
+
+<p align="center">
+  Made with ❤️ using Laravel
+</p>

@@ -489,4 +489,25 @@
             </div>
         </div>
     </footer>
+
+    <!-- Floating Export Button -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <div class="relative group">
+            <!-- Main Button -->
+            <a href="{{ route('admin.export.options') }}" 
+               class="flex items-center justify-center w-14 h-14 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </a>
+            
+            <!-- Tooltip -->
+            <div class="absolute bottom-full right-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                <div class="bg-gray-900 text-white text-xs rounded py-1 px-3 whitespace-nowrap">
+                    Export Data
+                    <div class="absolute top-full right-4 w-2 h-2 bg-gray-900 transform rotate-45"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </x-admin-layout>

@@ -181,11 +181,8 @@
         }
 
         function startScanner() {
-            // PERBAIKAN: Tidak menggunakan qrbox, biarkan scan full area
             const config = { 
                 fps: 10,
-                // Hapus qrbox agar scan area menjadi full screen
-                // qrbox parameter dihapus
                 aspectRatio: 1.0,
                 // Tambahan config untuk meningkatkan detection
                 rememberLastUsedCamera: true,

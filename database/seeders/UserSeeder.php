@@ -20,5 +20,14 @@ class UserSeeder extends Seeder
             'phone_number' => '081234567890',
             'role' => 'admin',
         ]);
+
+        User::create([
+            'name' => 'John Doe',
+            'email' => 'user@example.com',
+            'password' => Hash::make('password'),
+            'department' => 'HR',
+            'phone_number' => '081234567891',
+            'role' => 'user',
+        ]);
     }
 }

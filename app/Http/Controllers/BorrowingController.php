@@ -166,7 +166,7 @@ class BorrowingController extends Controller
     public function generateReceipt(Borrowing $borrowing)
     {
         // cek status peminjaman
-        if ($borrowing->status != 'approved' && $borrowing->status != 'borrowed' && $borrowing->status != 'returned') {
+        if ($borrowing->status != 'approved' && $borrowing->status != 'borrowed' && $borrowing->status != 'returned' && $borrowing->status != 'waiting_return' && $borrowing->status != 'waiting_pickup') {
             abort(403, 'Receipt can only be generated for approved, borrowed, or returned borrowings.');
         }
 

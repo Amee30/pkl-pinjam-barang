@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BarangMovementController;
+use App\Http\Controllers\ExportController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -53,6 +54,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/qr-scanner', [AdminController::class, 'showQrScanner'])->name('qr-scanner');
     Route::post('/qr-scan/pickup', [AdminController::class, 'scanPickup'])->name('qr.pickup');
     Route::post('/qr-scan/return', [AdminController::class, 'scanReturn'])->name('qr.return');
+
+    // Export Routes
+    Route::get('/export', [ExportController::class, 'showExportOptions'])->name('export.options');
+    Route::get('/export/excel', [ExportController::class, 'exportExcel'])->name('export.excel');
+    Route::get('/export/pdf', [ExportController::class, 'exportPdf'])->name('export.pdf');
 });
 
 require __DIR__.'/auth.php';

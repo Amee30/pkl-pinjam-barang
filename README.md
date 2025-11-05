@@ -182,6 +182,12 @@ Generate dan print QR code untuk setiap barang untuk memudahkan proses validasi 
 Tracking pergerakan barang dengan detail informasi peminjaman dan pengembalian.
 <img src="public/Images/itemmovementsindex_preview.png">
 
+### Export Data
+Export data barang, user, peminjaman, dan pergerakan barang ke format Excel atau pdf untuk reporting.
+<img src="public/Images/export_preview.png">
+
+dan masih banyak lagi fitur lainnya...
+
 ## 🔐 Security Features
 
 - Authentication dengan Laravel Breeze

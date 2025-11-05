@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     
-                    <!-- Total Pengguna - Di baris bawah pada desktop -->
+                    <!-- Total Pengguna -->
                     <div class="bg-white overflow-hidden shadow rounded-lg p-4 sm:col-span-2 lg:col-span-1">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 mr-3">
@@ -158,9 +158,18 @@
                                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                                             Pending
                                                         </span>
+                                                    @elseif($peminjaman->status == 'waiting_pickup')
+                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-teal-100 text-teal-800">
+                                                            Waiting Pickup
+                                                        </span>
                                                     @elseif($peminjaman->status == 'borrowed')
-                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                        <!-- Info: User belum request return -->
+                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800" title="Waiting for user to request return">
                                                             Borrowed
+                                                        </span>
+                                                    @elseif($peminjaman->status == 'waiting_return')
+                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                                            Waiting Return
                                                         </span>
                                                     @elseif($peminjaman->status == 'returned')
                                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
@@ -224,18 +233,30 @@
                                                                 </svg>
                                                             </button>
                                                         @elseif($peminjaman->status == 'borrowed')
-                                                            <!-- Return Button -->
-                                                            <form action="{{ route('admin.peminjaman.return', $peminjaman) }}" method="POST" class="inline-flex">
-                                                                @csrf
-                                                                <button type="submit" 
-                                                                        class="p-1 border border-gray-300 rounded-full text-blue-600 hover:bg-blue-100 hover:border-blue-400 transition-colors duration-200" 
-                                                                        title="Mark as Returned"
-                                                                        onclick="return confirm('Are you sure you want to return this item?')">
-                                                                    <svg class="h-4 w-4 sm:h-5 sm:w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                                                                    </svg>
-                                                                </button>
-                                                            </form>
+                                                            <!-- Info: User belum request return -->
+                                                            <span class="p-1 text-xs text-gray-400" title="Waiting for user to request return">
+                                                                <svg class="h-4 w-4 sm:h-5 sm:w-5 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                </svg>
+                                                            </span>
+                                                        @elseif($peminjaman->status == 'waiting_return')
+                                                            <!-- Return Button - Redirect to QR Scanner -->
+                                                            <a href="{{ route('admin.qr-scanner', ['mode' => 'return']) }}" 
+                                                               class="p-1 border border-gray-300 rounded-full text-orange-600 hover:bg-orange-100 hover:border-orange-400 transition-colors duration-200" 
+                                                               title="Scan to Return">
+                                                                <svg class="h-4 w-4 sm:h-5 sm:w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                                                                </svg>
+                                                            </a>
+                                                        @elseif($peminjaman->status == 'waiting_pickup')
+                                                            <!-- Pickup Button - Redirect to QR Scanner -->
+                                                            <a href="{{ route('admin.qr-scanner', ['mode' => 'pickup']) }}" 
+                                                               class="p-1 border border-gray-300 rounded-full text-teal-600 hover:bg-teal-100 hover:border-teal-400 transition-colors duration-200" 
+                                                               title="Scan to Pickup">
+                                                                <svg class="h-4 w-4 sm:h-5 sm:w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                </svg>
+                                                            </a>
                                                         @endif
                                                     </div>
                                                 </td>
@@ -468,4 +489,25 @@
             </div>
         </div>
     </footer>
+
+    <!-- Floating Export Button -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <div class="relative group">
+            <!-- Main Button -->
+            <a href="{{ route('admin.export.options') }}" 
+               class="flex items-center justify-center w-14 h-14 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </a>
+            
+            <!-- Tooltip -->
+            <div class="absolute bottom-full right-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                <div class="bg-gray-900 text-white text-xs rounded py-1 px-3 whitespace-nowrap">
+                    Export Data
+                    <div class="absolute top-full right-4 w-2 h-2 bg-gray-900 transform rotate-45"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </x-admin-layout>

@@ -87,24 +87,9 @@ class BorrowingController extends Controller
             return redirect()->back()->with('error', 'This item is not currently borrowed.');
         }
 
-        $borrowing->update(['status' => 'returned']);
+        $borrowing->update(['status' => 'waiting_return']);
 
-        if ($borrowing->barang) {
-            $borrowing->barang->increment('stok');
-            // Catat pergerakan barang masuk
-            \App\Models\BarangMovement::create([
-                'barang_id' => $borrowing->barang_id,
-                'type' => 'in',
-                'quantity' => 1,
-                'source' => 'Return Borrowing',
-                'reason' => 'Returned by ' . $borrowing->user->name,
-                'date' => now()->format('Y-m-d'),
-                'notes' => 'Return from Borrower ID ' . $borrowing->id,
-                'user_id' => Auth::id(),
-            ]);
-        }
-
-        return redirect()->route('pinjam.history')->with('success', 'The item has been returned.');
+        return redirect()->route('pinjam.history')->with('success', 'Return Request Submitted. Please bring the item to admin for scanning');
 
 
     }
@@ -181,7 +166,7 @@ class BorrowingController extends Controller
     public function generateReceipt(Borrowing $borrowing)
     {
         // cek status peminjaman
-        if ($borrowing->status != 'approved' && $borrowing->status != 'borrowed' && $borrowing->status != 'returned') {
+        if ($borrowing->status != 'approved' && $borrowing->status != 'borrowed' && $borrowing->status != 'returned' && $borrowing->status != 'waiting_return' && $borrowing->status != 'waiting_pickup') {
             abort(403, 'Receipt can only be generated for approved, borrowed, or returned borrowings.');
         }
 

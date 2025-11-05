@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BarangMovementController;
+use App\Http\Controllers\ExportController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -36,13 +37,28 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::resource('barang', AdminController::class);
+    
+    // Gunakan resource kecuali show
+    Route::resource('barang', AdminController::class)->except(['show']);
+    
     Route::resource('users', UserController::class);
     Route::resource('movements', BarangMovementController::class);
+    
+    // Route untuk AJAX requests
     Route::get('/barang/{id}/details', [AdminController::class, 'getDetails'])->name('barang.details');
+    Route::get('/barang/{id}/qr-code', [AdminController::class, 'getQrCode'])->name('barang.qrcode');
+    
     Route::post('/peminjaman/{peminjaman}/approve', [AdminController::class, 'approve'])->name('peminjaman.approve');
     Route::post('/peminjaman/{peminjaman}/reject', [AdminController::class, 'reject'])->name('peminjaman.reject');
-    Route::post('/peminjaman/{peminjaman}/return', [AdminController::class, 'return'])->name('peminjaman.return');
+
+    Route::get('/qr-scanner', [AdminController::class, 'showQrScanner'])->name('qr-scanner');
+    Route::post('/qr-scan/pickup', [AdminController::class, 'scanPickup'])->name('qr.pickup');
+    Route::post('/qr-scan/return', [AdminController::class, 'scanReturn'])->name('qr.return');
+
+    // Export Routes
+    Route::get('/export', [ExportController::class, 'showExportOptions'])->name('export.options');
+    Route::get('/export/excel', [ExportController::class, 'exportExcel'])->name('export.excel');
+    Route::get('/export/pdf', [ExportController::class, 'exportPdf'])->name('export.pdf');
 });
 
 require __DIR__.'/auth.php';

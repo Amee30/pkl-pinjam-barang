@@ -13,8 +13,32 @@ class BarangsSeeder extends Seeder
      */
     public function run(): void
     {
-        Barangs::create(['nama_barang' => 'Laptop A', 'kategori' => 'Elektronik', 'stok' => 10]);
-        Barangs::create(['nama_barang' => 'Proyektor B', 'kategori' => 'Elektronik', 'stok' => 5]);
-        Barangs::create(['nama_barang' => 'Kabel HDMI', 'kategori' => 'Aksesoris', 'stok' => 20]);
+        Barangs::create([
+            'name_barang' => 'Laptop Dell Inspiron',
+            'kategori' => 'Laptop',
+            'serial_number' => 'DL123456',
+            'stok' => 1,
+        ]);
+
+        Barangs::create([
+            'name_barang' => 'Proyektor Epson',
+            'kategori' => 'Proyektor',
+            'serial_number' => 'EP123456',
+            'stok' => 1,
+        ]);
+
+        Barangs::create([
+            'name_barang' => 'Kamera Canon EOS',
+            'kategori' => 'Kamera',
+            'serial_number' => 'CA123456',
+            'stok' => 1,
+        ]);
+
+        Barangs::create([
+            'name_barang' => 'Kabel Data Type-C',
+            'kategori' => 'Aksesoris',
+            'stok' => 50,
+        ]);
+        
     }
 }

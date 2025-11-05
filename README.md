@@ -162,17 +162,25 @@ Setelah menjalankan seeder, gunakan credentials berikut:
 
 ## 📸 Screenshots
 
-### User Dashboard
-Menampilkan daftar barang yang tersedia untuk dipinjam dengan informasi stok dan status.
+### User Dashboard 
+Menampilkan daftar barang yang tersedia untuk dipinjam dengan informasi stok dan status untuk mengelola request peminjaman dengan status tracking.
+<img src="public/Images/userdashboard_preview.png">
 
-### Admin Dashboard
-Overview statistik sistem dengan chart dan quick actions.
+### Admin Dashboard dan Borrowing management
+Overview statistik sistem dengan chart, quick actions dan table borrower list.
+<img src="public/Images/dashboard_preview.png">
+
+### Item Management
+Menampilkan daftar barang dengan fitur CRUD, QR Code generation, dan stock management.
+<img src="public/Images/barangsindex_preview.png">
 
 ### QR Code Feature
 Generate dan print QR code untuk setiap barang untuk memudahkan proses validasi pengambilan barang dan pengembalian.
+<img src="public/Images/qrscanner_preview.png">
 
-### Borrowing Management
-Interface untuk mengelola request peminjaman dengan status tracking.
+### Item Movement History
+Tracking pergerakan barang dengan detail informasi peminjaman dan pengembalian.
+<img src="public/Images/itemmovementsindex_preview.png">
 
 ## 🔐 Security Features
 

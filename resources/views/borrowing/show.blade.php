@@ -50,6 +50,8 @@
                                 <span class="w-2/3">
                                     @if($borrowing->status == 'pending')
                                         <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Waiting for Approval</span>
+                                    @elseif($borrowing->status == 'waiting_pickup')
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">Waiting for Pickup</span>
                                     @elseif($borrowing->status == 'borrowed')
                                         <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Currently Borrowed</span>
                                     @elseif($borrowing->status == 'returned')

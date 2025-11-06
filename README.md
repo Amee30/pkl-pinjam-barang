@@ -10,37 +10,37 @@
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
 </p>
 
-## 📋 Tentang InvenTrack
+## 📋 About InvenTrack
 
-**InvenTrack** adalah sistem manajemen inventaris dan peminjaman barang berbasis web yang dirancang untuk mengelola peminjaman dan pengembalian barang secara efisien. Dilengkapi dengan fitur QR Code untuk tracking barang, laporan PDF, dan export data ke Excel.
+**InvenTrack** is a web-based inventory and item borrowing management system designed to efficiently manage item loans and returns. Equipped with QR Code features for item tracking, PDF reports, and data export to Excel.
 
-> 💡 Project ini dibuat untuk keperluan Praktik Kerja Lapangan (PKL)
+> 💡 This project was created for Internship purposes
 
-## ✨ Fitur Utama
+## ✨ Key Features
 
 ### 👤 User Features
-- **Dashboard User**: Melihat daftar barang yang tersedia untuk dipinjam
-- **Peminjaman Barang**: Submit request peminjaman barang
-- **Riwayat Peminjaman**: Melihat history peminjaman dengan berbagai status
-- **Receipt PDF**: Download bukti peminjaman dalam format PDF
-- **Real-time Status**: Tracking status peminjaman (Pending, Approved, Borrowed, Returned, Rejected)
+- **User Dashboard**: View available items for borrowing
+- **Item Borrowing**: Submit item borrowing requests
+- **Borrowing History**: View borrowing history with various statuses
+- **PDF Receipt**: Download borrowing proof in PDF format
+- **Real-time Status**: Track borrowing status (Pending, Approved, Borrowed, Returned, Rejected)
 
 ### 👨‍💼 Admin Features
-- **Dashboard Admin**: Overview statistik sistem (Total Barang, Users, Peminjaman, dll)
-- **Manajemen Barang**: 
-  - CRUD barang dengan foto
-  - Generate QR Code untuk setiap barang
+- **Admin Dashboard**: System statistics overview (Total Items, Users, Borrowings, etc.)
+- **Item Management**: 
+  - CRUD items with photos
+  - Generate QR Code for each item
   - Print QR Code
   - Serial number tracking
   - Stock management
-- **Manajemen User**: CRUD user dengan role management (Admin/User)
-- **Manajemen Peminjaman**: 
-  - Approve/Reject request peminjaman
-  - Tandai barang sebagai borrowed/returned
-  - View detail peminjaman
-- **Movement History**: Tracking pergerakan barang
-- **Export Data**: Export data ke Excel (Barang, Users, Borrowings, Movements)
-- **Search & Filter**: Pencarian dan filter data dengan mudah
+- **User Management**: CRUD users with role management (Admin/User)
+- **Borrowing Management**: 
+  - Approve/Reject borrowing requests
+  - Mark items as borrowed/returned
+  - View borrowing details
+- **Movement History**: Track item movements
+- **Export Data**: Export data to Excel (Items, Users, Borrowings, Movements)
+- **Search & Filter**: Easy data search and filtering
 
 ## 🛠️ Tech Stack
 
@@ -56,7 +56,7 @@
   - `simplesoftwareio/simple-qrcode` - Generate QR Code
   - `laravel/breeze` - Authentication
 
-## 📦 Instalasi
+## 📦 Installation
 
 ### Prerequisites
 - PHP >= 8.2
@@ -64,12 +64,12 @@
 - MySQL/PostgreSQL
 - Node.js & NPM
 
-### Langkah Instalasi
+### Installation Steps
 
 1. **Clone Repository**
    ```bash
-   git clone https://github.com/username/pkl-pinjam-barang.git
-   cd pkl-pinjam-barang
+   git clone https://github.com/Amee30/InvenTrack-Internship-Project.git
+   cd InvenTrack-Internship-Project
    ```
 
 2. **Install Dependencies**
@@ -86,12 +86,12 @@
 
 4. **Database Configuration**
    
-   Edit file `.env` sesuai dengan konfigurasi database Anda:
+   Edit file `.env` and set your database credentials:
    ```env
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
    DB_PORT=3306
-   DB_DATABASE=pinjam_barang
+   DB_DATABASE=inventrack
    DB_USERNAME=root
    DB_PASSWORD=
    ```
@@ -118,11 +118,11 @@
    php artisan serve
    ```
 
-   Aplikasi akan berjalan di `http://localhost:8000`
+   Your app is running at `http://localhost:8000`
 
 ## 👥 Default Credentials
 
-Setelah menjalankan seeder, gunakan credentials berikut:
+After seeding the database, you can use the following default credentials to log in:
 
 **Admin:**
 - Email: `admin@example.com`
@@ -132,61 +132,61 @@ Setelah menjalankan seeder, gunakan credentials berikut:
 - Email: `user@example.com`
 - Password: `password`
 
-## 📁 Struktur Database
+## 📁 Database Structure
 
 ### Tables
-- `users` - Data pengguna (admin & user)
-- `barangs` - Data barang
-- `borrowings` - Data peminjaman
-- `movements` - History pergerakan barang
+- `users` - User Data (admin & user)
+- `barangs` - Item Data
+- `borrowings` - Borrowing Data
+- `movements` - Item Movement History
 
-## 🎯 Cara Penggunaan
+## 🎯 How To Use
 
-### Untuk User:
-1. Login ke sistem
-2. Browse barang yang tersedia di dashboard
-3. Klik "Borrow Now" untuk mengajukan peminjaman
-4. Tunggu approval dari admin
-5. Lihat status peminjaman di "Borrowing History"
-6. Jika status Waiting Pickup silahkan ke lokasi pengambilan barang
+### For Users:
+1. Log in to the system
+2. Browse available items on the dashboard
+3. Click "Borrow Now" to submit a borrowing request
+4. Wait for admin approval
+5. Check borrowing status in "Borrowing History"
+6. If status is Waiting Pickup, please go to the item pickup location
 
-### Untuk Admin:
-1. Login sebagai admin
-2. Kelola data barang, user, dan peminjaman
-3. Approve/reject request peminjaman
-4. Tandai barang sebagai borrowed/returned
-5. Monitor pergerakan barang di Movement History
-6. Export data untuk reporting
-7. Print Receipt ketika sudah mengapprove peminjaman
-8. Scan QR untuk memvalidasi pengambilan barang dan pengembalian barang
+### For Admin:
+1. Log in as admin
+2. Manage item, user, and borrowing data
+3. Approve/reject borrowing requests
+4. Mark items as borrowed/returned
+5. Monitor item movements in Movement History
+6. Export data for reporting
+7. Print Receipt when borrowing is approved
+8. Scan QR to validate item pickup and return
 
 ## 📸 Screenshots
 
-### User Dashboard 
-Menampilkan daftar barang yang tersedia untuk dipinjam dengan informasi stok dan status untuk mengelola request peminjaman dengan status tracking.
+### User Dashboard
+Displays a list of available items for borrowing with stock and status information to manage borrowing requests with status tracking.
 <img src="public/Images/userdashboard_preview.png">
 
-### Admin Dashboard dan Borrowing management
-Overview statistik sistem dengan chart, quick actions dan table borrower list.
+### Admin Dashboard and Borrowing Management
+Overview of system statistics with charts, quick actions, and a table of borrower lists.
 <img src="public/Images/dashboard_preview.png">
 
 ### Item Management
-Menampilkan daftar barang dengan fitur CRUD, QR Code generation, dan stock management.
+Shows a list of items with CRUD features, QR Code generation, and stock management.
 <img src="public/Images/barangsindex_preview.png">
 
 ### QR Code Feature
-Generate dan print QR code untuk setiap barang untuk memudahkan proses validasi pengambilan barang dan pengembalian.
+Generate and print QR codes for each item to facilitate the validation process for item pickup and return.
 <img src="public/Images/qrscanner_preview.png">
 
 ### Item Movement History
-Tracking pergerakan barang dengan detail informasi peminjaman dan pengembalian.
+Tracking item movements with detailed information on borrowing and returning.
 <img src="public/Images/itemmovementsindex_preview.png">
 
 ### Export Data
-Export data barang, user, peminjaman, dan pergerakan barang ke format Excel atau pdf untuk reporting.
+Export item, user, borrowing, and item movement data to Excel or PDF format for reporting.
 <img src="public/Images/export_preview.png">
 
-dan masih banyak lagi fitur lainnya...
+and many more...
 
 ## 🔐 Security Features
 
@@ -199,7 +199,7 @@ dan masih banyak lagi fitur lainnya...
 
 ## 📱 Responsive Design
 
-Aplikasi ini fully responsive dan dapat diakses dengan baik di:
+This application is built with a responsive design using Tailwind CSS, ensuring optimal user experience across various devices:
 - Desktop (1920px+)
 - Laptop (1024px - 1919px)
 - Tablet (768px - 1023px)
@@ -207,7 +207,7 @@ Aplikasi ini fully responsive dan dapat diakses dengan baik di:
 
 ## 📝 License
 
-Project ini adalah open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## 👨‍💻 Developer
 

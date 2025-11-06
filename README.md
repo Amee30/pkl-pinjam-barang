@@ -1,4 +1,4 @@
-# 📦 Sistem Manajemen Inventaris dan Peminjaman Barang (Item Borrowing System)
+# 📦 InvenTrack - Smart Inventory & Borrowing Management System
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
@@ -10,11 +10,11 @@
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
 </p>
 
-## 📋 Deskripsi Project
+## 📋 Tentang InvenTrack
 
-Sistem Peminjaman Barang adalah aplikasi web berbasis Laravel yang dirancang untuk mengelola peminjaman dan pengembalian barang secara efisien. Sistem ini dilengkapi dengan fitur QR Code untuk tracking barang, laporan PDF, dan export data ke Excel.
+**InvenTrack** adalah sistem manajemen inventaris dan peminjaman barang berbasis web yang dirancang untuk mengelola peminjaman dan pengembalian barang secara efisien. Dilengkapi dengan fitur QR Code untuk tracking barang, laporan PDF, dan export data ke Excel.
 
-NOTE: Project ini dibuat untuk keperluan Magang saya
+> 💡 Project ini dibuat untuk keperluan Praktik Kerja Lapangan (PKL)
 
 ## ✨ Fitur Utama
 
@@ -211,11 +211,12 @@ Project ini adalah open-source software licensed under the [MIT license](https:/
 
 ## 👨‍💻 Developer
 
-Developed with ❤️ by Darma and AI
+Developed with ❤️ by Darma
 
 ## 📧 Contact
 - Email: darmaputra2017@gmail.com
 - GitHub: [@Amee30](https://github.com/Amee30)
+- Project Link: [InvenTrack](https://github.com/Amee30/InvenTrack)
 
 ## 🙏 Acknowledgments
 

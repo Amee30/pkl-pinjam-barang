@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "amee30/inventrack",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Smart Inventory & Borrowing Management System",
+    "keywords": ["laravel", "inventory", "borrowing", "tracking", "qr-code"],
     "license": "MIT",
     "require": {
         "php": "^8.2",

@@ -216,7 +216,7 @@ Developed with ❤️ by Darma
 ## 📧 Contact
 - Email: darmaputra2017@gmail.com
 - GitHub: [@Amee30](https://github.com/Amee30)
-- Project Link: [InvenTrack](https://github.com/Amee30/InvenTrack)
+- Project Link: [InvenTrack](https://github.com/Amee30/InvenTrack-Internship-Project)
 
 ## 🙏 Acknowledgments
 

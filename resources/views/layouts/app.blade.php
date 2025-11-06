@@ -28,8 +28,14 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
+            <main class="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900">
+                <!-- Content -->
+                <div class="min-h-full">
+                    {{ $slot }}
+                </div>
+                
+                <!-- Footer - Full Width -->
+                <x-footer />
             </main>
         </div>
     </body>

@@ -1,7 +1,18 @@
 <div id="sidebar" class="bg-gray-800 text-white flex flex-col transition-all duration-300 ease-in-out h-screen sidebar-expanded">
     <div class="h-16 flex items-center justify-center text-xl font-bold border-b border-gray-700">
-        <span class="sidebar-text">Admin Panel</span>
-        <span class="sidebar-icon hidden">AP</span>
+        <span class="sidebar-text flex items-center">
+            <svg class="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+        </span>
+        <span class="sidebar-text">
+            InvenTrack
+        </span>
+        <span class="sidebar-icon hidden">
+            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+        </span>
     </div>
 
     <nav class="flex-1 px-4 py-6 space-y-2">
@@ -51,7 +62,7 @@
         </a>
     </nav>
     
-    <!-- Profile Section with Toggle Button -->
+    <!-- Sidebar Toggle Button -->
     <div class="border-t border-gray-700">
         <!-- Toggle Button -->
         <div class="flex items-center justify-center py-3 border-b border-gray-700">
@@ -61,17 +72,6 @@
                 </svg>
                 <span class="sidebar-text ml-2 text-sm font-medium">Collapse</span>
             </button>
-        </div>
-        
-        <!-- User Profile -->
-        <div class="p-4">
-            <div class="sidebar-text">
-                <div class="font-semibold">{{ Auth::user()->name }}</div>
-                <div class="text-sm text-gray-400">{{ Auth::user()->email }}</div>
-            </div>
-            <div class="sidebar-icon hidden text-center font-bold text-lg">
-                {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
-            </div>
         </div>
     </div>
 </div>
